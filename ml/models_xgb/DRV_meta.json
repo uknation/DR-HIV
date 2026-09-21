@@ -1,0 +1,23 @@
+{
+  "drug": "DRV",
+  "file": "GenoPhenoDatasets1.csv",
+  "samples": 993,
+  "resistant": 305,
+  "susceptible": 688,
+  "features": 294,
+  "acc": 0.92,
+  "auc": 0.977,
+  "r2": 0.788,
+  "top_mutations": [
+    "P33_F",
+    "P84_V",
+    "P90_M",
+    "P32_I",
+    "P46_I",
+    "P50_V",
+    "P54_M",
+    "P76_V",
+    "P54_V",
+    "P89_V"
+  ]
+}

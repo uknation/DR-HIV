@@ -1,0 +1,23 @@
+{
+  "drug": "D4T",
+  "file": "GenoPhenoDatasets2.Full.csv",
+  "samples": 1846,
+  "resistant": 338,
+  "susceptible": 1508,
+  "features": 535,
+  "acc": 0.906,
+  "auc": 0.946,
+  "r2": 0.144,
+  "top_mutations": [
+    "P75_I",
+    "P210_W",
+    "P116_Y",
+    "P118_I",
+    "P41_L",
+    "P151_M",
+    "P77_L",
+    "P208_Y",
+    "P115_F",
+    "P44_D"
+  ]
+}

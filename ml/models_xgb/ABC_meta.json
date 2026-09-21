@@ -1,0 +1,23 @@
+{
+  "drug": "ABC",
+  "file": "GenoPhenoDatasets2.Full.csv",
+  "samples": 1731,
+  "resistant": 927,
+  "susceptible": 804,
+  "features": 526,
+  "acc": 0.9,
+  "auc": 0.964,
+  "r2": 0.243,
+  "top_mutations": [
+    "P184_V",
+    "P41_L",
+    "P116_Y",
+    "P43_Q",
+    "P151_M",
+    "P70_R",
+    "P215_Y",
+    "P115_F",
+    "P70_E",
+    "P210_W"
+  ]
+}

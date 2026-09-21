@@ -1,0 +1,23 @@
+{
+  "drug": "AZT",
+  "file": "GenoPhenoDatasets2.Full.csv",
+  "samples": 1853,
+  "resistant": 834,
+  "susceptible": 1019,
+  "features": 533,
+  "acc": 0.924,
+  "auc": 0.974,
+  "r2": 0.635,
+  "top_mutations": [
+    "P41_L",
+    "P215_Y",
+    "P70_R",
+    "P116_Y",
+    "P215_F",
+    "P151_M",
+    "P67_N",
+    "P115_F",
+    "P118_I",
+    "P219_Q"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "drug": "DDI",
+  "file": "GenoPhenoDatasets2.Full.csv",
+  "samples": 1849,
+  "resistant": 163,
+  "susceptible": 1686,
+  "features": 536,
+  "acc": 0.935,
+  "auc": 0.878,
+  "r2": 0.323,
+  "top_mutations": [
+    "P75_I",
+    "P77_L",
+    "P116_Y",
+    "P151_M",
+    "P74_V",
+    "P65_R",
+    "P118_I",
+    "P75_M",
+    "P228_H",
+    "P62_V"
+  ]
+}

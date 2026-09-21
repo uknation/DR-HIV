@@ -1,0 +1,23 @@
+{
+  "drug": "TDF",
+  "file": "GenoPhenoDatasets2.Full.csv",
+  "samples": 1548,
+  "resistant": 172,
+  "susceptible": 1376,
+  "features": 523,
+  "acc": 0.919,
+  "auc": 0.912,
+  "r2": 0.243,
+  "top_mutations": [
+    "P41_L",
+    "P184_V",
+    "P219_R",
+    "P210_W",
+    "P215_Y",
+    "P68_G",
+    "P70_R",
+    "P151_M",
+    "P65_R",
+    "P74_V"
+  ]
+}

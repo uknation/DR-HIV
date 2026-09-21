@@ -1,0 +1,23 @@
+{
+  "drug": "LPV",
+  "file": "GenoPhenoDatasets1.csv",
+  "samples": 1807,
+  "resistant": 941,
+  "susceptible": 866,
+  "features": 346,
+  "acc": 0.947,
+  "auc": 0.988,
+  "r2": 0.78,
+  "top_mutations": [
+    "P54_V",
+    "P71_V",
+    "P82_A",
+    "P84_V",
+    "P46_I",
+    "P24_I",
+    "P33_F",
+    "P90_M",
+    "P54_L",
+    "P32_I"
+  ]
+}

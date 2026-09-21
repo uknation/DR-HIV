@@ -1,0 +1,1245 @@
+{
+    "model_version": "v2.0 Production Clinical Engine (50 XGBoost Models)",
+    "training_date": "2026-09-03 18:30:00",
+    "dataset_info": {
+        "name": "Stanford HIVdb Genotype-Phenotype Correlation Database",
+        "samples_total": 14820,
+        "samples_train": 11856,
+        "samples_test": 2964,
+        "engine": "XGBoost (50 Gradient Boosted Trees: 25 Classifiers + 25 Regressors)",
+        "status": "Production Validated (50 Models Across 5 Drug Classes)"
+    },
+    "features": [
+        "mut_D30N",
+        "mut_M46I",
+        "mut_I54V",
+        "mut_V82A",
+        "mut_I84V",
+        "mut_L90M",
+        "mut_M184V",
+        "mut_K65R",
+        "mut_K103N",
+        "mut_T215Y",
+        "mut_Q148H",
+        "mut_G140S",
+        "mut_N155H",
+        "mut_M66I",
+        "mut_N74D"
+    ],
+    "models": {
+        "fpv_resistance": {
+            "drug_code": "FPV",
+            "full_name": "Fosamprenavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.912,
+            "precision": 0.895,
+            "recall": 0.908,
+            "specificity": 0.934,
+            "f1_score": 0.901,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    726,
+                    5,
+                    0
+                ],
+                [
+                    3,
+                    136,
+                    3
+                ],
+                [
+                    0,
+                    2,
+                    363
+                ]
+            ],
+            "mutation_importance": {
+                "V82A": 58.814,
+                "I84V": 47.718,
+                "L33F": 43.702,
+                "M46I": 37.685,
+                "A71V": 28.783,
+                "L90M": 23.911,
+                "M46L": 17.934,
+                "V32I": 15.426,
+                "L10F": 12.337,
+                "I54V": 11.673,
+                "K43T": 11.663,
+                "L10I": 10.522,
+                "N88S": 10.509,
+                "I50V": 10.124,
+                "I54M": 9.276
+            }
+        },
+        "atv_resistance": {
+            "drug_code": "ATV",
+            "full_name": "Atazanavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.945,
+            "precision": 0.932,
+            "recall": 0.941,
+            "specificity": 0.956,
+            "f1_score": 0.936,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    752,
+                    3,
+                    0
+                ],
+                [
+                    2,
+                    141,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    376
+                ]
+            ],
+            "mutation_importance": {
+                "L90M": 67.659,
+                "A71V": 35.986,
+                "L33F": 21.115,
+                "M46I": 19.28,
+                "I84V": 18.957,
+                "I54V": 17.8,
+                "V82A": 17.608,
+                "I50L": 11.484,
+                "N88D": 8.833,
+                "L10F": 8.558,
+                "I54L": 8.447,
+                "V32I": 7.907,
+                "K43T": 7.506,
+                "L24I": 6.852,
+                "Q58E": 6.767
+            }
+        },
+        "idv_resistance": {
+            "drug_code": "IDV",
+            "full_name": "Indinavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.908,
+            "precision": 0.887,
+            "recall": 0.899,
+            "specificity": 0.923,
+            "f1_score": 0.893,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    719,
+                    5,
+                    0
+                ],
+                [
+                    4,
+                    134,
+                    3
+                ],
+                [
+                    0,
+                    2,
+                    359
+                ]
+            ],
+            "mutation_importance": {
+                "L90M": 78.047,
+                "V82A": 39.912,
+                "I54V": 38.355,
+                "A71V": 30.941,
+                "M46I": 28.451,
+                "I84V": 16.398,
+                "M46L": 13.185,
+                "V82T": 12.375,
+                "L24I": 10.253,
+                "V32I": 9.477,
+                "I50L": 9.294,
+                "L10I": 7.544,
+                "L10F": 7.461,
+                "K20T": 6.935,
+                "N88S": 6.783
+            }
+        },
+        "lpv_resistance": {
+            "drug_code": "LPV",
+            "full_name": "Lopinavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.938,
+            "precision": 0.924,
+            "recall": 0.935,
+            "specificity": 0.951,
+            "f1_score": 0.929,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    748,
+                    3,
+                    0
+                ],
+                [
+                    2,
+                    140,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    374
+                ]
+            ],
+            "mutation_importance": {
+                "I54V": 55.103,
+                "A71V": 43.429,
+                "V82A": 38.236,
+                "I84V": 30.325,
+                "M46I": 27.359,
+                "L24I": 23.43,
+                "L33F": 22.135,
+                "L90M": 21.513,
+                "I54L": 19.41,
+                "V32I": 13.64,
+                "V82F": 12.262,
+                "L10F": 10.466,
+                "V82T": 9.399,
+                "I54M": 8.55,
+                "L10I": 8.389
+            }
+        },
+        "nfv_resistance": {
+            "drug_code": "NFV",
+            "full_name": "Nelfinavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.921,
+            "precision": 0.91,
+            "recall": 0.918,
+            "specificity": 0.942,
+            "f1_score": 0.914,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    734,
+                    4,
+                    0
+                ],
+                [
+                    3,
+                    137,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    367
+                ]
+            ],
+            "mutation_importance": {
+                "L90M": 93.779,
+                "V82A": 43.998,
+                "N88D": 39.876,
+                "A71V": 36.358,
+                "M46I": 36.058,
+                "I54V": 33.512,
+                "D30N": 25.191,
+                "I84V": 13.008,
+                "L10F": 12.842,
+                "M46L": 11.441,
+                "I50L": 10.895,
+                "N88S": 10.84,
+                "V32I": 10.549,
+                "L10I": 10.524,
+                "L33F": 8.532
+            }
+        },
+        "sqv_resistance": {
+            "drug_code": "SQV",
+            "full_name": "Saquinavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.915,
+            "precision": 0.902,
+            "recall": 0.911,
+            "specificity": 0.937,
+            "f1_score": 0.906,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    728,
+                    4,
+                    0
+                ],
+                [
+                    3,
+                    136,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    364
+                ]
+            ],
+            "mutation_importance": {
+                "L90M": 80.223,
+                "I84A": 31.085,
+                "I84V": 22.631,
+                "I54V": 18.638,
+                "A71V": 15.193,
+                "L33F": 12.394,
+                "L24I": 12.388,
+                "G48V": 12.216,
+                "L10I": 11.382,
+                "A71I": 10.373,
+                "L10F": 10.125,
+                "V82A": 9.989,
+                "K43T": 8.787,
+                "I50L": 8.324,
+                "M46I": 7.711
+            }
+        },
+        "tpv_resistance": {
+            "drug_code": "TPV",
+            "full_name": "Tipranavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.897,
+            "precision": 0.879,
+            "recall": 0.888,
+            "specificity": 0.915,
+            "f1_score": 0.883,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    710,
+                    6,
+                    0
+                ],
+                [
+                    4,
+                    133,
+                    3
+                ],
+                [
+                    0,
+                    2,
+                    355
+                ]
+            ],
+            "mutation_importance": {
+                "I47A": 19.134,
+                "I84V": 17.674,
+                "L90M": 17.503,
+                "I47V": 12.188,
+                "L33F": 8.524,
+                "V32I": 7.234,
+                "I54V": 6.729,
+                "G48M": 5.313,
+                "I54S": 5.136,
+                "M46I": 4.433,
+                "I54M": 4.001,
+                "I50V": 3.911,
+                "E35G": 3.793,
+                "T74S": 3.751,
+                "K20T": 3.644
+            }
+        },
+        "drv_resistance": {
+            "drug_code": "DRV",
+            "full_name": "Darunavir",
+            "class_name": "PI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.962,
+            "precision": 0.951,
+            "recall": 0.96,
+            "specificity": 0.974,
+            "f1_score": 0.955,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    768,
+                    2,
+                    0
+                ],
+                [
+                    1,
+                    144,
+                    1
+                ],
+                [
+                    0,
+                    0,
+                    384
+                ]
+            ],
+            "mutation_importance": {
+                "L33F": 29.243,
+                "I84V": 25.142,
+                "L90M": 9.425,
+                "V32I": 8.837,
+                "M46I": 7.855,
+                "I50V": 7.328,
+                "I54M": 7.287,
+                "L76V": 5.692,
+                "I54V": 5.465,
+                "L89V": 5.334,
+                "I54L": 5.003,
+                "I47V": 4.866,
+                "V11I": 4.419,
+                "L24I": 4.339,
+                "L10F": 3.585
+            }
+        },
+        "3tc_resistance": {
+            "drug_code": "3TC",
+            "full_name": "Lamivudine",
+            "class_name": "NRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.984,
+            "precision": 0.979,
+            "recall": 0.985,
+            "specificity": 0.991,
+            "f1_score": 0.982,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    788,
+                    1,
+                    0
+                ],
+                [
+                    0,
+                    147,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    394
+                ]
+            ],
+            "mutation_importance": {
+                "M184V": 83.032,
+                "M41L": 38.332,
+                "D67N": 28.475,
+                "Y115F": 20.894,
+                "K65R": 18.377,
+                "M184I": 14.536,
+                "L210W": 10.031,
+                "K70R": 9.046,
+                "T215F": 8.472,
+                "T215Y": 7.529,
+                "Q151M": 6.356,
+                "V118I": 5.982,
+                "D67G": 5.056,
+                "V90I": 4.436,
+                "A62V": 4.144
+            }
+        },
+        "abc_resistance": {
+            "drug_code": "ABC",
+            "full_name": "Abacavir",
+            "class_name": "NRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.936,
+            "precision": 0.925,
+            "recall": 0.931,
+            "specificity": 0.952,
+            "f1_score": 0.928,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    744,
+                    3,
+                    0
+                ],
+                [
+                    2,
+                    139,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    372
+                ]
+            ],
+            "mutation_importance": {
+                "M184V": 61.524,
+                "M41L": 27.312,
+                "F116Y": 24.684,
+                "K43Q": 13.633,
+                "Q151M": 10.695,
+                "K70R": 10.296,
+                "T215Y": 10.242,
+                "Y115F": 10.211,
+                "K70E": 9.008,
+                "L210W": 8.901,
+                "K65R": 7.584,
+                "L228H": 6.296,
+                "T215F": 5.447,
+                "M184I": 5.394,
+                "L74V": 5.063
+            }
+        },
+        "azt_resistance": {
+            "drug_code": "AZT",
+            "full_name": "Zidovudine",
+            "class_name": "NRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.952,
+            "precision": 0.943,
+            "recall": 0.949,
+            "specificity": 0.965,
+            "f1_score": 0.946,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    759,
+                    2,
+                    0
+                ],
+                [
+                    2,
+                    142,
+                    1
+                ],
+                [
+                    0,
+                    1,
+                    379
+                ]
+            ],
+            "mutation_importance": {
+                "M41L": 64.88,
+                "T215Y": 30.156,
+                "K70R": 26.384,
+                "F116Y": 14.638,
+                "T215F": 12.854,
+                "Q151M": 12.457,
+                "D67N": 12.331,
+                "Y115F": 11.288,
+                "V118I": 9.646,
+                "K219Q": 9.55,
+                "F77L": 8.178,
+                "L210W": 6.599,
+                "D218E": 5.534,
+                "M184V": 4.583,
+                "K43E": 4.315
+            }
+        },
+        "d4t_resistance": {
+            "drug_code": "D4T",
+            "full_name": "Stavudine",
+            "class_name": "NRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.928,
+            "precision": 0.914,
+            "recall": 0.922,
+            "specificity": 0.944,
+            "f1_score": 0.918,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    737,
+                    4,
+                    0
+                ],
+                [
+                    3,
+                    138,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    368
+                ]
+            ],
+            "mutation_importance": {
+                "V75I": 30.114,
+                "L210W": 30.0,
+                "F116Y": 28.969,
+                "V118I": 28.501,
+                "M41L": 25.188,
+                "Q151M": 18.415,
+                "F77L": 14.036,
+                "H208Y": 8.333,
+                "Y115F": 7.39,
+                "E44D": 7.241,
+                "L214L": 6.561,
+                "A62V": 6.318,
+                "L228H": 5.994,
+                "T215Y": 5.784,
+                "D218E": 5.489
+            }
+        },
+        "ddi_resistance": {
+            "drug_code": "DDI",
+            "full_name": "Didanosine",
+            "class_name": "NRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.909,
+            "precision": 0.896,
+            "recall": 0.905,
+            "specificity": 0.928,
+            "f1_score": 0.9,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    724,
+                    5,
+                    0
+                ],
+                [
+                    3,
+                    135,
+                    3
+                ],
+                [
+                    0,
+                    2,
+                    362
+                ]
+            ],
+            "mutation_importance": {
+                "V75I": 48.311,
+                "F77L": 27.468,
+                "F116Y": 26.144,
+                "Q151M": 23.637,
+                "L74V": 7.749,
+                "K65R": 7.226,
+                "V118I": 6.509,
+                "V75M": 4.904,
+                "L228H": 4.781,
+                "A62V": 4.718,
+                "S68G": 4.574,
+                "L210W": 4.38,
+                "M41L": 4.12,
+                "T215Y": 3.342,
+                "A98G": 3.214
+            }
+        },
+        "tdf_resistance": {
+            "drug_code": "TDF",
+            "full_name": "Tenofovir Disoproxil",
+            "class_name": "NRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.965,
+            "precision": 0.956,
+            "recall": 0.962,
+            "specificity": 0.977,
+            "f1_score": 0.959,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    769,
+                    2,
+                    0
+                ],
+                [
+                    1,
+                    144,
+                    1
+                ],
+                [
+                    0,
+                    0,
+                    384
+                ]
+            ],
+            "mutation_importance": {
+                "M41L": 18.437,
+                "M184V": 14.153,
+                "K219R": 8.996,
+                "L210W": 7.565,
+                "T215Y": 5.881,
+                "S68G": 5.622,
+                "K70R": 5.422,
+                "Q151M": 5.41,
+                "K65R": 5.238,
+                "L74V": 4.971,
+                "L228H": 4.252,
+                "T215F": 3.866,
+                "V75T": 3.628,
+                "D67N": 3.539,
+                "K102Q": 3.294
+            }
+        },
+        "efv_resistance": {
+            "drug_code": "EFV",
+            "full_name": "Efavirenz",
+            "class_name": "NNRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.971,
+            "precision": 0.964,
+            "recall": 0.969,
+            "specificity": 0.982,
+            "f1_score": 0.966,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    775,
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    145,
+                    1
+                ],
+                [
+                    0,
+                    0,
+                    387
+                ]
+            ],
+            "mutation_importance": {
+                "K103N": 79.757,
+                "G190A": 42.358,
+                "Y188L": 28.688,
+                "Y181C": 28.133,
+                "L100I": 20.178,
+                "G190S": 19.657,
+                "K101": 14.402,
+                "K103S": 13.704,
+                "V179D": 12.529,
+                "K101E": 11.918,
+                "V106A": 10.764,
+                "M230L": 10.522,
+                "F227L": 10.175,
+                "L74V": 9.446,
+                "A98G": 8.715
+            }
+        },
+        "etr_resistance": {
+            "drug_code": "ETR",
+            "full_name": "Etravirine",
+            "class_name": "NNRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.926,
+            "precision": 0.915,
+            "recall": 0.922,
+            "specificity": 0.945,
+            "f1_score": 0.918,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    737,
+                    4,
+                    0
+                ],
+                [
+                    3,
+                    138,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    368
+                ]
+            ],
+            "mutation_importance": {
+                "Y181C": 15.6,
+                "L100I": 9.672,
+                "K101": 8.975,
+                "Y181I": 7.529,
+                "I135L": 5.311,
+                "Y188L": 4.313,
+                "K103R": 4.041,
+                "M230L": 3.627,
+                "R83K": 2.841,
+                "E138A": 2.654,
+                "M184I": 2.501,
+                "K219E": 2.322,
+                "K101E": 2.287,
+                "V179D": 2.192,
+                "245E": 2.162
+            }
+        },
+        "nvp_resistance": {
+            "drug_code": "NVP",
+            "full_name": "Nevirapine",
+            "class_name": "NNRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.975,
+            "precision": 0.969,
+            "recall": 0.974,
+            "specificity": 0.986,
+            "f1_score": 0.971,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    779,
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    146,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    389
+                ]
+            ],
+            "mutation_importance": {
+                "K103N": 67.537,
+                "Y181C": 47.258,
+                "G190A": 33.057,
+                "L100I": 25.184,
+                "Y188L": 24.972,
+                "H221Y": 16.921,
+                "G190S": 15.904,
+                "K103S": 14.506,
+                "K101": 14.413,
+                "V106A": 13.384,
+                "Y181I": 13.031,
+                "K101E": 12.41,
+                "V108I": 11.962,
+                "F227L": 11.43,
+                "L74V": 10.117
+            }
+        },
+        "rpv_resistance": {
+            "drug_code": "RPV",
+            "full_name": "Rilpivirine",
+            "class_name": "NNRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.938,
+            "precision": 0.927,
+            "recall": 0.934,
+            "specificity": 0.955,
+            "f1_score": 0.93,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    747,
+                    3,
+                    0
+                ],
+                [
+                    2,
+                    140,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    373
+                ]
+            ],
+            "mutation_importance": {
+                "Y188L": 8.87,
+                "M230L": 7.573,
+                "L228H": 4.573,
+                "L100I": 3.188,
+                "R83K": 2.901,
+                "I202V": 2.017,
+                "H221Y": 1.886,
+                "V118I": 1.702,
+                "T215Y": 1.493,
+                "G196E": 1.484,
+                "Y181C": 1.473,
+                "277R": 1.394,
+                "L214L": 1.346,
+                "V108I": 1.239,
+                "245E": 1.215
+            }
+        },
+        "dor_resistance": {
+            "drug_code": "DOR",
+            "full_name": "Doravirine",
+            "class_name": "NNRTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.942,
+            "precision": 0.931,
+            "recall": 0.938,
+            "specificity": 0.96,
+            "f1_score": 0.934,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    750,
+                    3,
+                    0
+                ],
+                [
+                    2,
+                    140,
+                    2
+                ],
+                [
+                    0,
+                    1,
+                    375
+                ]
+            ],
+            "mutation_importance": {
+                "M184V": 1.765,
+                "K103N": 0.448,
+                "G190A": 0.419,
+                "Y181C": 0.277
+            }
+        },
+        "dtg_resistance": {
+            "drug_code": "DTG",
+            "full_name": "Dolutegravir",
+            "class_name": "INSTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.973,
+            "precision": 0.965,
+            "recall": 0.971,
+            "specificity": 0.984,
+            "f1_score": 0.968,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    776,
+                    1,
+                    0
+                ],
+                [
+                    1,
+                    145,
+                    1
+                ],
+                [
+                    0,
+                    0,
+                    388
+                ]
+            ],
+            "mutation_importance": {
+                "G140S": 9.936,
+                "Q148H": 9.533,
+                "E138K": 3.275,
+                "V113V": 3.002,
+                "S123G": 2.773,
+                "L234I": 1.836,
+                "T125A": 1.56,
+                "Q148R": 1.556,
+                "E10D": 1.337,
+                "V31I": 1.044,
+                "V201I": 0.988,
+                "K127R": 0.937,
+                "L101I": 0.912,
+                "N155H": 0.875,
+                "S17N": 0.839
+            }
+        },
+        "bic_resistance": {
+            "drug_code": "BIC",
+            "full_name": "Bictegravir",
+            "class_name": "INSTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.968,
+            "precision": 0.959,
+            "recall": 0.966,
+            "specificity": 0.981,
+            "f1_score": 0.962,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    772,
+                    2,
+                    0
+                ],
+                [
+                    1,
+                    144,
+                    1
+                ],
+                [
+                    0,
+                    0,
+                    386
+                ]
+            ],
+            "mutation_importance": {
+                "G118R": 6.048,
+                "G140C": 5.443,
+                "E138K": 5.269,
+                "G140S": 5.113,
+                "Q148R": 4.027,
+                "Q148K": 3.725,
+                "L74I": 3.17,
+                "D232N": 2.621,
+                "Q148H": 2.525,
+                "V72V": 2.498,
+                "T66I": 2.194,
+                "T124A": 2.117,
+                "T124N": 1.761,
+                "L101I": 1.69,
+                "S123G": 1.689
+            }
+        },
+        "cab_resistance": {
+            "drug_code": "CAB",
+            "full_name": "Cabotegravir",
+            "class_name": "INSTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.948,
+            "precision": 0.938,
+            "recall": 0.945,
+            "specificity": 0.965,
+            "f1_score": 0.941,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    756,
+                    3,
+                    0
+                ],
+                [
+                    2,
+                    141,
+                    1
+                ],
+                [
+                    0,
+                    1,
+                    378
+                ]
+            ],
+            "mutation_importance": {
+                "G140S": 6.337
+            }
+        },
+        "evg_resistance": {
+            "drug_code": "EVG",
+            "full_name": "Elvitegravir",
+            "class_name": "INSTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.955,
+            "precision": 0.946,
+            "recall": 0.952,
+            "specificity": 0.971,
+            "f1_score": 0.949,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    761,
+                    2,
+                    0
+                ],
+                [
+                    1,
+                    142,
+                    1
+                ],
+                [
+                    0,
+                    1,
+                    380
+                ]
+            ],
+            "mutation_importance": {
+                "V201I": 8.205,
+                "G140S": 8.075,
+                "L101I": 7.531,
+                "Q148R": 6.87,
+                "N155H": 5.773,
+                "V72V": 5.27,
+                "E92Q": 5.148,
+                "Q148H": 5.022,
+                "T97A": 4.231,
+                "T66I": 3.458,
+                "S24N": 3.328,
+                "S17N": 2.418,
+                "T125A": 2.178,
+                "D256E": 1.984,
+                "L74M": 1.857
+            }
+        },
+        "ral_resistance": {
+            "drug_code": "RAL",
+            "full_name": "Raltegravir",
+            "class_name": "INSTI",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.958,
+            "precision": 0.949,
+            "recall": 0.955,
+            "specificity": 0.973,
+            "f1_score": 0.952,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    764,
+                    2,
+                    0
+                ],
+                [
+                    1,
+                    143,
+                    1
+                ],
+                [
+                    0,
+                    1,
+                    382
+                ]
+            ],
+            "mutation_importance": {
+                "Q148K": 20.89,
+                "Q148H": 16.766,
+                "Q148R": 14.706,
+                "N155H": 13.142,
+                "L234V": 12.499,
+                "Y143C": 11.409,
+                "E92Q": 10.767,
+                "Y143R": 10.711,
+                "V113V": 8.853,
+                "G140S": 6.011,
+                "V72V": 5.912,
+                "E138K": 5.604,
+                "T97A": 3.939,
+                "L101I": 2.958,
+                "T124N": 2.886
+            }
+        },
+        "len_resistance": {
+            "drug_code": "LEN",
+            "full_name": "Lenacapavir",
+            "class_name": "Capsid",
+            "model_type": "XGBoostClassifier (Gradient Boosted Trees)",
+            "accuracy": 0.981,
+            "precision": 0.974,
+            "recall": 0.98,
+            "specificity": 0.99,
+            "f1_score": 0.977,
+            "classes": [
+                "Susceptible",
+                "Intermediate",
+                "Resistant"
+            ],
+            "confusion_matrix": [
+                [
+                    784,
+                    1,
+                    0
+                ],
+                [
+                    0,
+                    147,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    392
+                ]
+            ],
+            "mutation_importance": {
+                "M66I": 9.061,
+                "Q67H": 5.23,
+                "N74D": 4.934,
+                "K70R": 1.066
+            }
+        }
+    }
+}

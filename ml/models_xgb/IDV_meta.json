@@ -1,0 +1,23 @@
+{
+  "drug": "IDV",
+  "file": "GenoPhenoDatasets1.csv",
+  "samples": 2098,
+  "resistant": 1050,
+  "susceptible": 1048,
+  "features": 346,
+  "acc": 0.935,
+  "auc": 0.983,
+  "r2": 0.68,
+  "top_mutations": [
+    "P90_M",
+    "P82_A",
+    "P54_V",
+    "P71_V",
+    "P46_I",
+    "P84_V",
+    "P46_L",
+    "P82_T",
+    "P24_I",
+    "P32_I"
+  ]
+}

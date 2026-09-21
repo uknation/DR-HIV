@@ -1,0 +1,420 @@
+{
+    "engine": "Sequence-Aware Deep Learning (1D-CNN & ESM-2 Transformer)",
+    "training_date": "2026-09-03 18:32:06",
+    "groups": {
+        "PI": {
+            "cnn_metrics": {
+                "FPV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.47,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "ATV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.58,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "IDV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.47,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "LPV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.57,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "NFV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.6,
+                    "precision": 0.6,
+                    "recall": 1.0,
+                    "specificity": 0.0,
+                    "f1_score": 0.75
+                },
+                "SQV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.56,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "TPV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.85,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "DRV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.86,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            },
+            "esm_metrics": {
+                "FPV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.47,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "ATV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.58,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "IDV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.47,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "LPV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.57,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "NFV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.6,
+                    "precision": 0.6,
+                    "recall": 1.0,
+                    "specificity": 0.0,
+                    "f1_score": 0.75
+                },
+                "SQV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.56,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "TPV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.85,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "DRV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.86,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            }
+        },
+        "NRTI": {
+            "cnn_metrics": {
+                "3TC": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.69,
+                    "precision": 0.69,
+                    "recall": 1.0,
+                    "specificity": 0.0,
+                    "f1_score": 0.8165680473372781
+                },
+                "ABC": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.44,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "AZT": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.52,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "D4T": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.79,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "DDI": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.93,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "TDF": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.63,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            },
+            "esm_metrics": {
+                "3TC": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.69,
+                    "precision": 0.69,
+                    "recall": 1.0,
+                    "specificity": 0.0,
+                    "f1_score": 0.8165680473372781
+                },
+                "ABC": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.44,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "AZT": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.52,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "D4T": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.79,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "DDI": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.93,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "TDF": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.63,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            }
+        },
+        "NNRTI": {
+            "cnn_metrics": {
+                "EFV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.56,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "NVP": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.51,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "ETR": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.86,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "RPV": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.94,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            },
+            "esm_metrics": {
+                "EFV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.56,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "NVP": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.51,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "ETR": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.86,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "RPV": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.94,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            }
+        },
+        "INSTI": {
+            "cnn_metrics": {
+                "DTG": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.65,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "BIC": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.65,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "RAL": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.6,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "EVG": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.6,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "CAB": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.65,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            },
+            "esm_metrics": {
+                "DTG": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.65,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "BIC": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.65,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "RAL": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.6,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "EVG": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.6,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                },
+                "CAB": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.65,
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "specificity": 1.0,
+                    "f1_score": 0.0
+                }
+            }
+        },
+        "CAPSID": {
+            "cnn_metrics": {
+                "LEN": {
+                    "model_type": "HIV1DCNN",
+                    "accuracy": 0.7142857142857143,
+                    "precision": 0.7142857142857143,
+                    "recall": 1.0,
+                    "specificity": 0.0,
+                    "f1_score": 0.8333333333333334
+                }
+            },
+            "esm_metrics": {
+                "LEN": {
+                    "model_type": "ESM2ProteinTransformer",
+                    "accuracy": 0.7142857142857143,
+                    "precision": 0.7142857142857143,
+                    "recall": 1.0,
+                    "specificity": 0.0,
+                    "f1_score": 0.8333333333333334
+                }
+            }
+        }
+    }
+}

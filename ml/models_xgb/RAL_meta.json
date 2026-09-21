@@ -1,0 +1,23 @@
+{
+  "drug": "RAL",
+  "file": "GenoPhenoDatasets4.Full.csv",
+  "samples": 753,
+  "resistant": 311,
+  "susceptible": 442,
+  "features": 334,
+  "acc": 0.898,
+  "auc": 0.954,
+  "r2": 0.777,
+  "top_mutations": [
+    "P148_K",
+    "P148_H",
+    "P148_R",
+    "P155_H",
+    "P234_V",
+    "P143_C",
+    "P92_Q",
+    "P143_R",
+    "P113_V",
+    "P140_S"
+  ]
+}

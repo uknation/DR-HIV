@@ -1,0 +1,23 @@
+{
+  "drug": "3TC",
+  "file": "GenoPhenoDatasets2.Full.csv",
+  "samples": 1839,
+  "resistant": 1164,
+  "susceptible": 675,
+  "features": 535,
+  "acc": 0.945,
+  "auc": 0.979,
+  "r2": 0.955,
+  "top_mutations": [
+    "P184_V",
+    "P41_L",
+    "P67_N",
+    "P115_F",
+    "P65_R",
+    "P184_I",
+    "P210_W",
+    "P70_R",
+    "P215_F",
+    "P215_Y"
+  ]
+}

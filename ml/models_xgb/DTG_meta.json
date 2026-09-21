@@ -1,0 +1,23 @@
+{
+  "drug": "DTG",
+  "file": "GenoPhenoDatasets4.Full.csv",
+  "samples": 370,
+  "resistant": 72,
+  "susceptible": 298,
+  "features": 215,
+  "acc": 0.892,
+  "auc": 0.852,
+  "r2": -1.564,
+  "top_mutations": [
+    "P140_S",
+    "P148_H",
+    "P138_K",
+    "P113_V",
+    "P123_G",
+    "P234_I",
+    "P125_A",
+    "P148_R",
+    "P10_D",
+    "P31_I"
+  ]
+}

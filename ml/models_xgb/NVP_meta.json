@@ -1,0 +1,23 @@
+{
+  "drug": "NVP",
+  "file": "GenoPhenoDatasets3.Full.csv",
+  "samples": 2052,
+  "resistant": 1053,
+  "susceptible": 999,
+  "features": 709,
+  "acc": 0.922,
+  "auc": 0.969,
+  "r2": 0.821,
+  "top_mutations": [
+    "P103_N",
+    "P181_C",
+    "P190_A",
+    "P100_I",
+    "P188_L",
+    "P221_Y",
+    "P190_S",
+    "P103_S",
+    "P101_P",
+    "P106_A"
+  ]
+}

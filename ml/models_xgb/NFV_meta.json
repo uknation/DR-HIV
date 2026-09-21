@@ -1,0 +1,23 @@
+{
+  "drug": "NFV",
+  "file": "GenoPhenoDatasets1.csv",
+  "samples": 2133,
+  "resistant": 1221,
+  "susceptible": 912,
+  "features": 351,
+  "acc": 0.946,
+  "auc": 0.983,
+  "r2": 0.68,
+  "top_mutations": [
+    "P90_M",
+    "P82_A",
+    "P88_D",
+    "P71_V",
+    "P46_I",
+    "P54_V",
+    "P30_N",
+    "P84_V",
+    "P10_F",
+    "P46_L"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "drug": "EFV",
+  "file": "GenoPhenoDatasets3.Full.csv",
+  "samples": 2168,
+  "resistant": 998,
+  "susceptible": 1170,
+  "features": 711,
+  "acc": 0.92,
+  "auc": 0.974,
+  "r2": 0.739,
+  "top_mutations": [
+    "P103_N",
+    "P190_A",
+    "P188_L",
+    "P181_C",
+    "P100_I",
+    "P190_S",
+    "P101_P",
+    "P103_S",
+    "P179_D",
+    "P101_E"
+  ]
+}

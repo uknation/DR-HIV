@@ -1,0 +1,412 @@
+{
+  "status": "Production-Ready",
+  "version": "0.2.0-ANRS-v35",
+  "last_updated": "2026-09-03",
+  "comment": "Clinical decision rules incorporating ANRS v35 (2024), WHO 2024 Consolidated Guidelines, and NACO National ART Protocols.",
+  "drug_classes": {
+    "NRTI": [
+      "tenofovir",
+      "lamivudine",
+      "emtricitabine",
+      "abacavir",
+      "zidovudine",
+      "stavudine",
+      "didanosine"
+    ],
+    "NNRTI": [
+      "efavirenz",
+      "nevirapine",
+      "rilpivirine",
+      "doravirine",
+      "etravirine"
+    ],
+    "INSTI": [
+      "dolutegravir",
+      "bictegravir",
+      "raltegravir",
+      "cabotegravir",
+      "elvitegravir"
+    ],
+    "PI": [
+      "darunavir",
+      "lopinavir",
+      "atazanavir",
+      "fosamprenavir",
+      "indinavir",
+      "nelfinavir",
+      "saquinavir",
+      "tipranavir"
+    ],
+    "Capsid": [
+      "lenacapavir"
+    ],
+    "Attachment": [
+      "fostemsavir"
+    ]
+  },
+  "drugs": {
+    "tenofovir": {
+      "display_name": "Tenofovir Disoproxil (TDF)",
+      "class": "NRTI",
+      "tier": "First-Line Preferred",
+      "renal_threshold_crcl": 50.0
+    },
+    "lamivudine": {
+      "display_name": "Lamivudine (3TC)",
+      "class": "NRTI",
+      "tier": "Universal Backbone Component",
+      "renal_threshold_crcl": 50.0
+    },
+    "emtricitabine": {
+      "display_name": "Emtricitabine (FTC)",
+      "class": "NRTI",
+      "tier": "Universal Backbone Component",
+      "renal_threshold_crcl": 50.0
+    },
+    "abacavir": {
+      "display_name": "Abacavir (ABC)",
+      "class": "NRTI",
+      "tier": "Alternative First-Line",
+      "requires_hla_b5701": true
+    },
+    "zidovudine": {
+      "display_name": "Zidovudine (AZT)",
+      "class": "NRTI",
+      "tier": "Second-Line Alternative",
+      "anemia_caution": true
+    },
+    "efavirenz": {
+      "display_name": "Efavirenz (EFV 400/600mg)",
+      "class": "NNRTI",
+      "tier": "Alternative First-Line",
+      "cns_caution": true
+    },
+    "nevirapine": {
+      "display_name": "Nevirapine (NVP)",
+      "class": "NNRTI",
+      "tier": "Legacy / Third-Line",
+      "hepatotoxicity_caution": true
+    },
+    "rilpivirine": {
+      "display_name": "Rilpivirine (RPV)",
+      "class": "NNRTI",
+      "tier": "First-Line (Low VL <100k)",
+      "food_requirement": true
+    },
+    "doravirine": {
+      "display_name": "Doravirine (DOR)",
+      "class": "NNRTI",
+      "tier": "Next-Gen NNRTI / Active vs K103N"
+    },
+    "etravirine": {
+      "display_name": "Etravirine (ETR)",
+      "class": "NNRTI",
+      "tier": "Second/Third-Line Salvage"
+    },
+    "dolutegravir": {
+      "display_name": "Dolutegravir (DTG 50mg)",
+      "class": "INSTI",
+      "tier": "First-Line Gold Standard (High Barrier)"
+    },
+    "bictegravir": {
+      "display_name": "Bictegravir (BIC 50mg)",
+      "class": "INSTI",
+      "tier": "First-Line STR (High Barrier)"
+    },
+    "raltegravir": {
+      "display_name": "Raltegravir (RAL 400mg BID)",
+      "class": "INSTI",
+      "tier": "First/Second-Line Alternative"
+    },
+    "cabotegravir": {
+      "display_name": "Cabotegravir (CAB)",
+      "class": "INSTI",
+      "tier": "Long-Acting Maintenance"
+    },
+    "darunavir": {
+      "display_name": "Darunavir / ritonavir (DRV/r)",
+      "class": "PI",
+      "tier": "Second-Line / Salvage Gold Standard"
+    },
+    "lopinavir": {
+      "display_name": "Lopinavir / ritonavir (LPV/r)",
+      "class": "PI",
+      "tier": "Second-Line Alternative (Pediatric / NACO legacy)"
+    },
+    "atazanavir": {
+      "display_name": "Atazanavir / ritonavir (ATV/r)",
+      "class": "PI",
+      "tier": "Second-Line Alternative"
+    },
+    "lenacapavir": {
+      "display_name": "Lenacapavir (LEN)",
+      "class": "Capsid",
+      "tier": "MDR HIV Salvage"
+    },
+    "fostemsavir": {
+      "display_name": "Fostemsavir (FTR)",
+      "class": "Attachment",
+      "tier": "MDR HIV Salvage"
+    },
+    "stavudine": {
+      "display_name": "Stavudine (d4T)",
+      "class": "NRTI",
+      "tier": "Legacy / Toxicity Warning",
+      "mitochondrial_toxicity_warning": true
+    },
+    "didanosine": {
+      "display_name": "Didanosine (ddI)",
+      "class": "NRTI",
+      "tier": "Legacy / Toxicity Warning",
+      "pancreatitis_warning": true
+    },
+    "fosamprenavir": {
+      "display_name": "Fosamprenavir / ritonavir (FPV/r)",
+      "class": "PI",
+      "tier": "Alternative PI"
+    },
+    "indinavir": {
+      "display_name": "Indinavir / ritonavir (IDV/r)",
+      "class": "PI",
+      "tier": "Legacy PI / Nephrolithiasis Caution"
+    },
+    "nelfinavir": {
+      "display_name": "Nelfinavir (NFV)",
+      "class": "PI",
+      "tier": "Legacy Unboosted PI"
+    },
+    "saquinavir": {
+      "display_name": "Saquinavir / ritonavir (SQV/r)",
+      "class": "PI",
+      "tier": "Legacy PI"
+    },
+    "tipranavir": {
+      "display_name": "Tipranavir / ritonavir (TPV/r)",
+      "class": "PI",
+      "tier": "MDR PI Salvage / Intracranial Caution"
+    },
+    "elvitegravir": {
+      "display_name": "Elvitegravir / cobicistat (EVG/c)",
+      "class": "INSTI",
+      "tier": "First-Line Alternative (Low Barrier)"
+    }
+  },
+  "scoring_weights": {
+    "active_drug_score": 30.0,
+    "reduced_activity_score": 15.0,
+    "high_resistance_score": 0.0,
+    "redundancy_penalty": -50.0,
+    "dual_nrtI_bonus": 10.0,
+    "class_diversity_bonus": 10.0,
+    "first_line_who_preference_bonus": 10.0,
+    "high_genetic_barrier_bonus": 10.0,
+    "unsupported_drug_penalty": -40.0
+  },
+  "clinical_rules": {
+    "avoid_coadmin": [
+      [
+        "lamivudine",
+        "emtricitabine"
+      ],
+      [
+        "tenofovir",
+        "zidovudine"
+      ],
+      [
+        "stavudine",
+        "zidovudine"
+      ],
+      [
+        "stavudine",
+        "didanosine"
+      ],
+      [
+        "didanosine",
+        "tenofovir"
+      ],
+      [
+        "dolutegravir",
+        "bictegravir"
+      ],
+      [
+        "raltegravir",
+        "dolutegravir"
+      ],
+      [
+        "darunavir",
+        "lopinavir"
+      ],
+      [
+        "darunavir",
+        "atazanavir"
+      ],
+      [
+        "atazanavir",
+        "lopinavir"
+      ],
+      [
+        "efavirenz",
+        "nevirapine"
+      ]
+    ],
+    "prefer_dual_nrtI_backbone": true,
+    "min_active_drugs": 2,
+    "tam_cluster_1": [
+      "M41L",
+      "L210W",
+      "T215Y"
+    ],
+    "tam_cluster_2": [
+      "D67N",
+      "K70R",
+      "K219Q",
+      "K219E"
+    ],
+    "multi_nrtI_complex": [
+      "Q151M",
+      "T69Ins"
+    ],
+    "high_insti_resistance_pathway": [
+      "Q148H",
+      "Q148R",
+      "Q148K",
+      "N155H",
+      "Y143R",
+      "R263K"
+    ]
+  },
+  "standard_regimens": [
+    {
+      "id": "REG_TLD",
+      "name": "TDF + 3TC + DTG",
+      "drugs": [
+        "tenofovir",
+        "lamivudine",
+        "dolutegravir"
+      ],
+      "category": "INSTI_based",
+      "line_tier": "Preferred First-Line",
+      "description": "WHO & NACO Gold Standard preferred first-line regimen for adults and adolescents."
+    },
+    {
+      "id": "REG_TAF_FTC_BIC",
+      "name": "TDF + FTC + BIC",
+      "drugs": [
+        "tenofovir",
+        "emtricitabine",
+        "bictegravir"
+      ],
+      "category": "INSTI_based",
+      "line_tier": "Preferred First-Line",
+      "description": "Preferred single-tablet regimen with high barrier to resistance."
+    },
+    {
+      "id": "REG_ABC_3TC_DTG",
+      "name": "ABC + 3TC + DTG",
+      "drugs": [
+        "abacavir",
+        "lamivudine",
+        "dolutegravir"
+      ],
+      "category": "INSTI_based",
+      "line_tier": "Alternative First-Line",
+      "description": "Preferred renal-sparing first-line regimen. Requires negative HLA-B*5701 test."
+    },
+    {
+      "id": "REG_TLE",
+      "name": "TDF + 3TC + EFV",
+      "drugs": [
+        "tenofovir",
+        "lamivudine",
+        "efavirenz"
+      ],
+      "category": "NRTI_NNRTI_based",
+      "line_tier": "Alternative First-Line",
+      "description": "Standard NNRTI-based first-line regimen where DTG is contraindicated."
+    },
+    {
+      "id": "REG_TDF_3TC_DOR",
+      "name": "TDF + 3TC + DOR",
+      "drugs": [
+        "tenofovir",
+        "lamivudine",
+        "doravirine"
+      ],
+      "category": "NRTI_NNRTI_based",
+      "line_tier": "Alternative First-Line",
+      "description": "Next-generation NNRTI regimen active against common NNRTI mutations like K103N."
+    },
+    {
+      "id": "REG_AZT_3TC_DRV",
+      "name": "AZT + 3TC + DRV",
+      "drugs": [
+        "zidovudine",
+        "lamivudine",
+        "darunavir"
+      ],
+      "category": "PI_based",
+      "line_tier": "Second-Line",
+      "description": "Preferred second-line regimen after TDF + DTG failure with boosted Protease Inhibitor."
+    },
+    {
+      "id": "REG_TDF_3TC_DRV",
+      "name": "TDF + 3TC + DRV",
+      "drugs": [
+        "tenofovir",
+        "lamivudine",
+        "darunavir"
+      ],
+      "category": "PI_based",
+      "line_tier": "Second-Line",
+      "description": "Second-line regimen after AZT-based first-line failure."
+    },
+    {
+      "id": "REG_AZT_3TC_LPV",
+      "name": "AZT + 3TC + LPV",
+      "drugs": [
+        "zidovudine",
+        "lamivudine",
+        "lopinavir"
+      ],
+      "category": "PI_based",
+      "line_tier": "Second-Line Alternative",
+      "description": "Alternative PI-based second-line regimen widely used in NACO pediatric programs."
+    },
+    {
+      "id": "REG_AZT_3TC_ATV",
+      "name": "AZT + 3TC + ATV",
+      "drugs": [
+        "zidovudine",
+        "lamivudine",
+        "atazanavir"
+      ],
+      "category": "PI_based",
+      "line_tier": "Second-Line Alternative",
+      "description": "Alternative once-daily boosted PI regimen with favorable lipid profile."
+    },
+    {
+      "id": "REG_SALVAGE_DRV_DTG_ETR",
+      "name": "DRV + DTG + ETR",
+      "drugs": [
+        "darunavir",
+        "dolutegravir",
+        "etravirine"
+      ],
+      "category": "Salvage_Multiclass",
+      "line_tier": "Third-Line / Salvage",
+      "description": "Multiclass salvage regimen combining two high-genetic-barrier agents + next-gen NNRTI for extensive NRTI resistance."
+    },
+    {
+      "id": "REG_SALVAGE_DRV_DTG_LEN",
+      "name": "DRV + DTG + LEN",
+      "drugs": [
+        "darunavir",
+        "dolutegravir",
+        "lenacapavir"
+      ],
+      "category": "Salvage_Multiclass",
+      "line_tier": "Third-Line / Salvage",
+      "description": "Next-generation multiclass salvage regimen combining boosted PI, high-barrier INSTI, and Capsid inhibitor for patients with pan-NRTI/NNRTI failure."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "drug": "CAB",
+  "file": "GenoPhenoDatasets4.Full.csv",
+  "threshold": 3.0,
+  "samples": 64,
+  "resistant": 52,
+  "susceptible": 12,
+  "features": 11,
+  "acc": 0.8487179487179489,
+  "auc": 0.8566666666666669,
+  "acc_holdout": 0.8461538461538461,
+  "auc_holdout": 0.7727272727272727,
+  "best_threshold": 0.0,
+  "r2": 0.25009089708328247,
+  "top_mutations": [
+    "P140_S",
+    "P148_R",
+    "P155_H",
+    "P148_K",
+    "P148_H",
+    "P140_R",
+    "P140_C",
+    "P140_A",
+    "P138_K",
+    "P138_A",
+    "P97_A"
+  ],
+  "config": "cfg_base"
+}
