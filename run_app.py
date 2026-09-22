@@ -74,9 +74,12 @@ def start_backend_server(host, port, reload):
     )
 
 if __name__ == "__main__":
+    default_port = int(os.environ.get("PORT", 8000))
+    default_host = os.environ.get("HOST", "0.0.0.0" if os.environ.get("PORT") or os.environ.get("RENDER") else "127.0.0.1")
+    
     parser = argparse.ArgumentParser(description="AI-Powered HIV ART Regimen Selector Launcher")
-    parser.add_argument("--host", default="127.0.0.1", help="Host address to bind the server")
-    parser.add_argument("--port", type=int, default=8000, help="Port to run the application")
+    parser.add_argument("--host", default=default_host, help="Host address to bind the server")
+    parser.add_argument("--port", type=int, default=default_port, help="Port to run the application")
     parser.add_argument("--reload", action="store_true", help="Enable uvicorn hot-reload (development only)")
     parser.add_argument("--force-train", action="store_true", help="Force retrain ML models on startup")
     

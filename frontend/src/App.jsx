@@ -15,8 +15,7 @@ import ModelBenchmarkModal from './components/ModelBenchmarkModal';
 import ModelBenchmarkPage from './components/ModelBenchmarkPage';
 import Pagination from './components/Pagination';
 import LandingPage from './components/LandingPage';
-
-const API_BASE = '/api';
+import { API_BASE } from './config';
 
 export default function App() {
   // Auth state - persist session in localStorage to prevent logout on page refresh

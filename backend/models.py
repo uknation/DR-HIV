@@ -1,7 +1,9 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text, Float
 from sqlalchemy.orm import relationship
-import datetime
-from database import Base
+try:
+    from backend.database import Base
+except ImportError:
+    from database import Base
 
 def get_utc_now():
     return datetime.datetime.now(datetime.timezone.utc)

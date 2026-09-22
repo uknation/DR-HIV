@@ -7,6 +7,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import axios from 'axios';
+import { API_BASE } from '../config';
 
 export default function ModelBenchmarkPage() {
   const [data, setData] = useState(null);
@@ -17,7 +18,7 @@ export default function ModelBenchmarkPage() {
 
   useEffect(() => {
     setLoading(true);
-    axios.get('/api/models/benchmark')
+    axios.get(`${API_BASE}/models/benchmark`)
       .then((res) => {
         setData(res.data);
         setLoading(false);

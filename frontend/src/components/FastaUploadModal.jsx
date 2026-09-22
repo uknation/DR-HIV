@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, FileText, CheckCircle2, AlertCircle, X, Sparkles, Dna, ArrowRight } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE } from '../config';
 
 const SAMPLES = {
   pr_dna: `>Sample_01_PR_D30N_M46I
@@ -30,7 +31,7 @@ export default function FastaUploadModal({ isOpen, onClose, onMutationsExtracted
     setResult(null);
 
     try {
-      const response = await axios.post('/api/genotype/parse-fasta', {
+      const response = await axios.post(`${API_BASE}/genotype/parse-fasta`, {
         fasta_text: textToAnalyze
       });
 

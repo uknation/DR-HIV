@@ -1,0 +1,7 @@
+.git
+venv/
+__pycache__/
+*.whl
+.whl_cache/
+*.pyc
+tests/

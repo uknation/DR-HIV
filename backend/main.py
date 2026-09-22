@@ -11,23 +11,21 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 import pandas as pd
 
-# Add project root to sys.path so we can import from ml/ and clinical/
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml"))
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "clinical"))
+# Add project root and subdirectories to sys.path
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+for sub in ["", "backend", "ml", "clinical", "reports"]:
+    p = os.path.join(PROJECT_ROOT, sub) if sub else PROJECT_ROOT
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 # DB imports
 try:
     from backend import models, schemas
     from backend.database import engine, Base, get_db, auto_migrate
 except ImportError:
-    try:
-        import models
-        import schemas
-        from database import engine, Base, get_db, auto_migrate
-    except ImportError:
-        from sih.backend import models, schemas
-        from sih.backend.database import engine, Base, get_db, auto_migrate
+    import models
+    import schemas
+    from database import engine, Base, get_db, auto_migrate
 
 # ML & Clinical imports
 try:
@@ -37,11 +35,11 @@ try:
     from clinical.regimen_rules import rank_regimens, load_knowledge_base, save_knowledge_base
     from reports.pdf_generator import generate_pdf_report
 except ImportError:
-    from sih.ml.predict import predict_resistance, ALL_MUTATIONS
-    from sih.ml.deep_learning.predict_deep import predict_sequence_aware_resistance
-    from sih.ml.fasta_parser import parse_fasta_input
-    from sih.clinical.regimen_rules import rank_regimens, load_knowledge_base, save_knowledge_base
-    from sih.reports.pdf_generator import generate_pdf_report
+    from predict import predict_resistance, ALL_MUTATIONS
+    from deep_learning.predict_deep import predict_sequence_aware_resistance
+    from fasta_parser import parse_fasta_input
+    from regimen_rules import rank_regimens, load_knowledge_base, save_knowledge_base
+    from pdf_generator import generate_pdf_report
 
 # Create and auto-migrate SQLite tables
 auto_migrate()
