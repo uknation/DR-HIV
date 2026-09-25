@@ -133,7 +133,10 @@ def update_profile(profile_req: schemas.DoctorUpdate, email: str, db: Session = 
             detail="Doctor profile not found."
         )
     
-    update_data = profile_req.dict(exclude_unset=True)
+    if hasattr(profile_req, "model_dump"):
+        update_data = profile_req.model_dump(exclude_unset=True)
+    else:
+        update_data = profile_req.dict(exclude_unset=True)
     for field, val in update_data.items():
         if hasattr(doc, field) and val is not None:
             setattr(doc, field, val)
