@@ -27,19 +27,17 @@ except ImportError:
     import schemas
     from database import engine, Base, get_db, auto_migrate
 
+import gc
+
 # ML & Clinical imports
 try:
     from ml.predict import predict_resistance, ALL_MUTATIONS
-    from ml.deep_learning.predict_deep import predict_sequence_aware_resistance
     from ml.fasta_parser import parse_fasta_input
     from clinical.regimen_rules import rank_regimens, load_knowledge_base, save_knowledge_base
-    from reports.pdf_generator import generate_pdf_report
 except ImportError:
     from predict import predict_resistance, ALL_MUTATIONS
-    from deep_learning.predict_deep import predict_sequence_aware_resistance
     from fasta_parser import parse_fasta_input
     from regimen_rules import rank_regimens, load_knowledge_base, save_knowledge_base
-    from pdf_generator import generate_pdf_report
 
 # Create and auto-migrate SQLite tables
 auto_migrate()
@@ -381,6 +379,10 @@ def analyze_genotype(analysis_req: schemas.GenotypeAnalyzeRequest, db: Session =
     engine_type = (analysis_req.engine or "catboost").lower()
     
     if engine_type in ["cnn", "esm", "ensemble"]:
+        try:
+            from ml.deep_learning.predict_deep import predict_sequence_aware_resistance
+        except ImportError:
+            from deep_learning.predict_deep import predict_sequence_aware_resistance
         deep_res = predict_sequence_aware_resistance(
             analysis_req.mutations, 
             raw_sequence=analysis_req.raw_sequence or "",
@@ -700,10 +702,16 @@ def download_pdf_report(analysis_id: int, db: Session = Depends(get_db)):
     pdf_path = os.path.join(output_dir, pdf_filename)
     
     # Generate PDF
+    try:
+        from reports.pdf_generator import generate_pdf_report
+    except ImportError:
+        from pdf_generator import generate_pdf_report
+
     generate_pdf_report(
         pdf_path, case_dict, genotype_dict, 
         predictions, regimens, review_data, doc_name
     )
+    gc.collect()
     
     return FileResponse(
         path=pdf_path,

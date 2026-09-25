@@ -3,6 +3,12 @@ import sys
 import subprocess
 import argparse
 
+# Constrain thread pools to reduce memory allocation on cloud containers
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("WEB_CONCURRENCY", "1")
+os.environ.setdefault("PYTHONUNBUFFERED", "1")
+
 def train_models_if_missing():
     """Runs training if metrics.json or models are missing."""
     metrics_path = os.path.join("ml", "models", "metrics.json")

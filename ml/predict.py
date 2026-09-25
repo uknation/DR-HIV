@@ -25,15 +25,15 @@ MODELS_DIR = os.path.join(ML_DIR, "models")
 XGB_DIR = os.path.join(ML_DIR, "models_xgb")
 
 # Cache for models and metrics
-_MODELS_CACHE = {}
+_MODELS_CACHE = None
 _METRICS = None
 _XGB_CACHE = {"clf": {}, "reg": {}}
 _XGB_FEAT_MAP = None
 
-def load_xgb_resources():
-    """Loads all 50 XGBoost models (25 classifiers + 25 regressors) and feature mappings."""
-    global _XGB_CACHE, _XGB_FEAT_MAP
-    if not _XGB_FEAT_MAP:
+def load_xgb_features():
+    """Loads XGBoost feature mappings lazily."""
+    global _XGB_FEAT_MAP
+    if _XGB_FEAT_MAP is None:
         feat_path = os.path.join(XGB_DIR, "features_xgb.json")
         if os.path.exists(feat_path):
             try:
@@ -44,25 +44,38 @@ def load_xgb_resources():
                 _XGB_FEAT_MAP = {}
         else:
             _XGB_FEAT_MAP = {}
-            
-    if (not _XGB_CACHE["clf"] or not _XGB_CACHE["reg"]) and os.path.exists(XGB_DIR):
-        try:
-            import xgboost as xgb
-            for f in os.listdir(XGB_DIR):
-                if f.endswith("_clf.json"):
-                    drug = f.replace("_clf.json", "")
-                    clf = xgb.XGBClassifier()
-                    clf.load_model(os.path.join(XGB_DIR, f))
-                    _XGB_CACHE["clf"][drug] = clf
-                elif f.endswith("_reg.json"):
-                    drug = f.replace("_reg.json", "")
-                    reg = xgb.XGBRegressor()
-                    reg.load_model(os.path.join(XGB_DIR, f))
-                    _XGB_CACHE["reg"][drug] = reg
-        except Exception as e:
-            print(f"Warning loading XGBoost models: {e}")
-            
-    return _XGB_CACHE, _XGB_FEAT_MAP
+    return _XGB_FEAT_MAP
+
+def get_single_xgb_model(drug_code):
+    """Loads single XGBoost Classifier & Regressor on demand to conserve RAM."""
+    global _XGB_CACHE
+    if drug_code not in _XGB_CACHE["clf"]:
+        clf_path = os.path.join(XGB_DIR, f"{drug_code}_clf.json")
+        if os.path.exists(clf_path):
+            try:
+                import xgboost as xgb
+                clf = xgb.XGBClassifier()
+                clf.load_model(clf_path)
+                _XGB_CACHE["clf"][drug_code] = clf
+            except Exception as e:
+                print(f"Warning loading XGBoost clf for {drug_code}: {e}")
+
+    if drug_code not in _XGB_CACHE["reg"]:
+        reg_path = os.path.join(XGB_DIR, f"{drug_code}_reg.json")
+        if os.path.exists(reg_path):
+            try:
+                import xgboost as xgb
+                reg = xgb.XGBRegressor()
+                reg.load_model(reg_path)
+                _XGB_CACHE["reg"][drug_code] = reg
+            except Exception as e:
+                print(f"Warning loading XGBoost reg for {drug_code}: {e}")
+
+    return _XGB_CACHE["clf"].get(drug_code), _XGB_CACHE["reg"].get(drug_code)
+
+def load_xgb_resources():
+    """Backward-compatible loader providing cached XGBoost maps."""
+    return _XGB_CACHE, load_xgb_features()
 
 ALL_25_DRUGS_CONFIG = [
     # Protease Inhibitors (PI) - 8 drugs
@@ -104,16 +117,45 @@ ALL_25_DRUGS_CONFIG = [
 DRUG_CODE_MAP = {d["key"]: d["code"] for d in ALL_25_DRUGS_CONFIG}
 DRUG_CODE_MAP["emtricitabine"] = "3TC"
 
+class LazyModelDict(dict):
+    """Lazy dictionary that loads .pkl models on first access to conserve RAM."""
+    def __getitem__(self, key):
+        if not super().__contains__(key):
+            model_path = os.path.join(MODELS_DIR, f"model_{key}.pkl")
+            if os.path.exists(model_path):
+                with open(model_path, "rb") as f:
+                    super().__setitem__(key, pickle.load(f))
+            else:
+                raise KeyError(key)
+        return super().__getitem__(key)
+        
+    def __contains__(self, key):
+        if super().__contains__(key):
+            return True
+        model_path = os.path.join(MODELS_DIR, f"model_{key}.pkl")
+        return os.path.exists(model_path)
+        
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
+    def __bool__(self):
+        return os.path.exists(MODELS_DIR) and any(f.endswith('.pkl') for f in os.listdir(MODELS_DIR))
+
 def predict_single_xgb_drug(drug_code, mutations_list):
-    """Executes dual inference using fine-tuned XGBoost Classifier + Regressor."""
-    xgb_cache, feat_map = load_xgb_resources()
-    if not feat_map or drug_code not in feat_map or drug_code not in xgb_cache["clf"]:
+    """Executes dual inference using fine-tuned XGBoost Classifier + Regressor (loaded on-demand)."""
+    feat_map = load_xgb_features()
+    if not feat_map or drug_code not in feat_map:
+        return None
+        
+    clf, reg = get_single_xgb_model(drug_code)
+    if clf is None:
         return None
         
     info = feat_map[drug_code]
     feats = info["features"]
-    clf = xgb_cache["clf"][drug_code]
-    reg = xgb_cache["reg"].get(drug_code)
     
     x = np.zeros((1, len(feats)), dtype=np.float32)
     feat_idx = {f: i for i, f in enumerate(feats)}
@@ -159,25 +201,20 @@ def predict_single_xgb_drug(drug_code, mutations_list):
     }
 
 def load_ml_resources():
-    """Loads models and metrics into cache if not already loaded."""
-    global _METRICS
+    """Loads models and metrics into cache lazily."""
+    global _MODELS_CACHE, _METRICS
     
-    if not _MODELS_CACHE:
-        # Load metrics.json
+    if _METRICS is None:
         metrics_path = os.path.join(MODELS_DIR, "metrics.json")
         if os.path.exists(metrics_path):
             with open(metrics_path, "r") as f:
                 _METRICS = json.load(f)
         else:
             print("Warning: metrics.json not found. Run train.py first.")
+            _METRICS = {}
             
-        # Load all models
-        model_files = [f for f in os.listdir(MODELS_DIR) if f.endswith(".pkl")]
-        for model_file in model_files:
-            name = model_file.replace("model_", "").replace(".pkl", "")
-            path = os.path.join(MODELS_DIR, model_file)
-            with open(path, "rb") as f:
-                _MODELS_CACHE[name] = pickle.load(f)
+    if _MODELS_CACHE is None:
+        _MODELS_CACHE = LazyModelDict()
                 
     return _MODELS_CACHE, _METRICS
 

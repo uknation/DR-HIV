@@ -2,7 +2,14 @@ services:
   - type: web
     name: hiv-regimen-selector-backend
     env: python
-    buildCommand: pip install -r requirements.txt && python ml/train.py
+    buildCommand: pip install --no-cache-dir -r requirements.txt
     startCommand: python run_app.py
     plan: free
     autoDeploy: true
+    envVars:
+      - key: WEB_CONCURRENCY
+        value: 1
+      - key: OMP_NUM_THREADS
+        value: 1
+      - key: MKL_NUM_THREADS
+        value: 1

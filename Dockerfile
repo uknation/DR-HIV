@@ -12,9 +12,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Train ML models if missing
-RUN python ml/train.py
+ENV WEB_CONCURRENCY=1 \
+    OMP_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
