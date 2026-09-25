@@ -66,8 +66,26 @@ async def add_no_cache_headers(request, call_next):
     response.headers["Expires"] = "0"
     return response
 
-# Seed default doctor on startup
+import threading
+
+def warmup_models_in_background():
+    """Silently pre-warms ML models in a background daemon thread upon startup for zero cold-start delay."""
+    try:
+        from ml.predict import load_xgb_features, get_single_xgb_model, ALL_25_DRUGS_CONFIG, load_ml_resources
+        load_xgb_features()
+        for item in ALL_25_DRUGS_CONFIG:
+            get_single_xgb_model(item["code"])
+        load_ml_resources()
+        print("ML models successfully pre-warmed in background for instant inference.")
+    except Exception as e:
+        print(f"Model background warm-up notice: {e}")
+
+# Seed default doctor and trigger background model warm-up on startup
 @app.on_event("startup")
+def startup_tasks():
+    seed_data()
+    threading.Thread(target=warmup_models_in_background, daemon=True).start()
+
 def seed_data():
     db = next(get_db())
     try:

@@ -46,6 +46,26 @@ _DEEP_CACHE = {
     "metrics": None
 }
 
+_SPATIAL_MODELS = None
+_BIO_EMBEDDING = None
+
+def get_spatial_models():
+    global _SPATIAL_MODELS
+    if _SPATIAL_MODELS is None:
+        _SPATIAL_MODELS = {
+            "PR": SpatialContactBias(length=99, protein_type="PR"),
+            "RT": SpatialContactBias(length=240, protein_type="RT"),
+            "IN": SpatialContactBias(length=288, protein_type="IN"),
+            "CA": SpatialContactBias(length=231, protein_type="CA"),
+        }
+    return _SPATIAL_MODELS
+
+def get_bio_embedding():
+    global _BIO_EMBEDDING
+    if _BIO_EMBEDDING is None:
+        _BIO_EMBEDDING = BiophysicalResidueEmbedding()
+    return _BIO_EMBEDDING
+
 CONFIGS = {
     "PI": {
         "gene_type": "PR",
@@ -287,9 +307,9 @@ def predict_sequence_aware_resistance(
                 "status": "Success"
             }
             
-        # Generate Grad-CAM for the first resistant drug or top drug in group
+        # Generate Grad-CAM selectively for groups with mutations or reduced/high resistance
         grad_cam_explainer = _DEEP_CACHE["grad_cam"].get(group_name)
-        if grad_cam_explainer is not None:
+        if grad_cam_explainer is not None and (not is_wildtype or (probs_cnn is not None and np.max(probs_cnn) >= 0.30)):
             # Pick first drug with highest resistance probability
             top_drug_idx = int(np.argmax(probs_cnn)) if probs_cnn is not None else 0
             cam_profile = grad_cam_explainer.generate_cam(tokens, target_drug_idx=top_drug_idx, orig_seq_len=cfg["max_len"])
@@ -322,17 +342,11 @@ def predict_sequence_aware_resistance(
         uncertainty=torch.tensor(raw_u)
     )
 
-    # Next-Gen Neural Network V2.0: Extract biophysical deltas and 3D pocket contacts
-    dummy_bio = BiophysicalResidueEmbedding()
+    # Next-Gen Neural Network V2.0: Extract biophysical deltas and 3D pocket contacts using singletons
+    dummy_bio = get_bio_embedding()
     biophysical_profiles = {}
     spatial_3d_pockets = {}
-    
-    spatial_models = {
-        "PR": SpatialContactBias(length=99, protein_type="PR"),
-        "RT": SpatialContactBias(length=240, protein_type="RT"),
-        "IN": SpatialContactBias(length=288, protein_type="IN"),
-        "CA": SpatialContactBias(length=231, protein_type="CA"),
-    }
+    spatial_models = get_spatial_models()
     
     for m in mutations:
         wt, pos, mut_aa = parse_mutation_token(m)
@@ -373,7 +387,6 @@ def predict_sequence_aware_resistance(
         "low_confidence_flag": low_confidence_flag,
         "mutations_analyzed": mutations
     }
-    gc.collect()
     return result
 
 if __name__ == "__main__":
