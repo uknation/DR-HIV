@@ -199,3 +199,14 @@ def preprocess_single_input(mutations_list, clinical_data):
         
     df_single = pd.DataFrame([features])[feature_cols]
     return df_single
+
+
+# Expose Stanford Dataset Preprocessing Pipeline
+try:
+    from ml.preprocess_datasets import StanfordDatasetPreprocessor, DATASET_CONFIGS
+except ImportError:
+    try:
+        from preprocess_datasets import StanfordDatasetPreprocessor, DATASET_CONFIGS
+    except ImportError:
+        StanfordDatasetPreprocessor = None  # type: ignore
+        DATASET_CONFIGS = None  # type: ignore

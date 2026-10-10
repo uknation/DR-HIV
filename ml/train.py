@@ -209,7 +209,15 @@ def train_real_pipeline():
         },
         "NNRTI": {
             "file": "NNRTI_DataSet_processed.csv",
-            "drugs": ["EFV", "NVP", "ETR", "RPV"]
+            "drugs": ["EFV", "NVP", "ETR", "RPV", "DOR"]
+        },
+        "INSTI": {
+            "file": "INSTI_DataSet_processed.csv",
+            "drugs": ["RAL", "EVG", "DTG", "BIC", "CAB"]
+        },
+        "CAPSID": {
+            "file": "Capsid_DataSet_processed.csv",
+            "drugs": ["LEN"]
         }
     }
     

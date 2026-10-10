@@ -1,23 +1,14 @@
 {
   "drug": "3TC",
-  "file": "GenoPhenoDatasets2.Full.csv",
-  "samples": 1839,
-  "resistant": 1164,
-  "susceptible": 675,
-  "features": 535,
-  "acc": 0.945,
-  "auc": 0.979,
-  "r2": 0.955,
-  "top_mutations": [
-    "P184_V",
-    "P41_L",
-    "P67_N",
-    "P115_F",
-    "P65_R",
-    "P184_I",
-    "P210_W",
-    "P70_R",
-    "P215_F",
-    "P215_Y"
-  ]
+  "group": "NRTI",
+  "samples_total": 1839,
+  "samples_train": 1471,
+  "samples_test": 368,
+  "accuracy": 0.9538,
+  "precision": 0.9696,
+  "recall": 0.9571,
+  "f1_score": 0.9633,
+  "auc": 0.9889,
+  "rmse": 0.2414,
+  "r2": 0.9254
 }

@@ -110,7 +110,9 @@ def train_group_deep_models(
     for _, row in df.iterrows():
         # Check if row has P1...Pn columns
         row_dict = row.to_dict()
-        if "P1" in row_dict:
+        if "reconstructed_sequence" in row_dict and pd.notna(row_dict["reconstructed_sequence"]):
+            seq = str(row_dict["reconstructed_sequence"])
+        elif "P1" in row_dict:
             seq = parse_stanford_columns(row_dict, gene_type=gene_type)
         elif "CompMutList" in row_dict and pd.notna(row_dict["CompMutList"]):
             seq = reconstruct_sequence(str(row_dict["CompMutList"]), gene_type=gene_type)
@@ -147,7 +149,9 @@ def train_group_deep_models(
         else:
             lbl = np.zeros(len(df))
             
-        if drug in df.columns:
+        if f"{drug}_log_fc" in df.columns:
+            log_fc = df[f"{drug}_log_fc"].fillna(0.0).values
+        elif drug in df.columns:
             fc_raw = pd.to_numeric(df[drug], errors='coerce').fillna(1.0).clip(lower=0.1, upper=1000.0)
             log_fc = np.log10(fc_raw.values)
         elif alias_col in df.columns:
@@ -365,35 +369,35 @@ def train_all_deep_models(epochs: int = 15, force_retrain: bool = False):
     configs = [
         {
             "group_name": "PI",
-            "raw_file": "PI_DataSet_processed.csv",
+            "raw_file": "PI_sequences.csv",
             "drugs": ["FPV", "ATV", "IDV", "LPV", "NFV", "SQV", "TPV", "DRV"],
             "gene_type": "PR",
             "max_len": 99
         },
         {
             "group_name": "NRTI",
-            "raw_file": "NRTI_DataSet_processed.csv",
+            "raw_file": "NRTI_sequences.csv",
             "drugs": ["3TC", "ABC", "AZT", "D4T", "DDI", "TDF"],
             "gene_type": "RT",
             "max_len": 240
         },
         {
             "group_name": "NNRTI",
-            "raw_file": "NNRTI_DataSet_processed.csv",
-            "drugs": ["EFV", "NVP", "ETR", "RPV"],
+            "raw_file": "NNRTI_sequences.csv",
+            "drugs": ["EFV", "NVP", "ETR", "RPV", "DOR"],
             "gene_type": "RT",
             "max_len": 240
         },
         {
             "group_name": "INSTI",
-            "raw_file": "hiv_full_drug_synthetic_100_HIV101-200.csv",
-            "drugs": ["DTG", "BIC", "RAL", "EVG", "CAB"],
+            "raw_file": "INSTI_sequences.csv",
+            "drugs": ["RAL", "EVG", "DTG", "BIC", "CAB"],
             "gene_type": "IN",
             "max_len": 288
         },
         {
             "group_name": "CAPSID",
-            "raw_file": "Capsid_DataSet_processed.csv",
+            "raw_file": "Capsid_sequences.csv",
             "drugs": ["LEN"],
             "gene_type": "CA",
             "max_len": 231

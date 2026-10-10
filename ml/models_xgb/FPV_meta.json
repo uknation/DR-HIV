@@ -1,23 +1,14 @@
 {
   "drug": "FPV",
-  "file": "GenoPhenoDatasets1.csv",
-  "samples": 2052,
-  "resistant": 884,
-  "susceptible": 1168,
-  "features": 351,
-  "acc": 0.915,
-  "auc": 0.974,
-  "r2": 0.733,
-  "top_mutations": [
-    "P82_A",
-    "P84_V",
-    "P33_F",
-    "P46_I",
-    "P71_V",
-    "P90_M",
-    "P46_L",
-    "P32_I",
-    "P10_F",
-    "P54_V"
-  ]
+  "group": "PI",
+  "samples_total": 2052,
+  "samples_train": 1641,
+  "samples_test": 411,
+  "accuracy": 0.9148,
+  "precision": 0.9299,
+  "recall": 0.9087,
+  "f1_score": 0.9192,
+  "auc": 0.9727,
+  "rmse": 0.2191,
+  "r2": 0.8902
 }

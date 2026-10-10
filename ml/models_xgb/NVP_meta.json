@@ -1,23 +1,14 @@
 {
   "drug": "NVP",
-  "file": "GenoPhenoDatasets3.Full.csv",
-  "samples": 2052,
-  "resistant": 1053,
-  "susceptible": 999,
-  "features": 709,
-  "acc": 0.922,
-  "auc": 0.969,
-  "r2": 0.821,
-  "top_mutations": [
-    "P103_N",
-    "P181_C",
-    "P190_A",
-    "P100_I",
-    "P188_L",
-    "P221_Y",
-    "P190_S",
-    "P103_S",
-    "P101_P",
-    "P106_A"
-  ]
+  "group": "NNRTI",
+  "samples_total": 1371,
+  "samples_train": 1096,
+  "samples_test": 275,
+  "accuracy": 0.9709,
+  "precision": 0.9927,
+  "recall": 0.951,
+  "f1_score": 0.9714,
+  "auc": 0.9889,
+  "rmse": 0.249,
+  "r2": 0.9266
 }

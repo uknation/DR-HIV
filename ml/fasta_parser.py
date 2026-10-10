@@ -34,7 +34,7 @@ except ImportError:
     try:
         from deep_learning.sequence_tokenizer import HXB2_PR, HXB2_RT, HXB2_IN, HXB2_CA
     except ImportError:
-        from sih.ml.deep_learning.sequence_tokenizer import HXB2_PR, HXB2_RT, HXB2_IN, HXB2_CA
+        from deep_learning.sequence_tokenizer import HXB2_PR, HXB2_RT, HXB2_IN, HXB2_CA
 
 GENE_REFERENCES = {
     "PR": {"seq": HXB2_PR, "name": "Protease", "len": 99},

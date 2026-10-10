@@ -1,23 +1,14 @@
 {
   "drug": "SQV",
-  "file": "GenoPhenoDatasets1.csv",
-  "samples": 2084,
-  "resistant": 897,
-  "susceptible": 1187,
-  "features": 351,
-  "acc": 0.913,
-  "auc": 0.975,
-  "r2": 0.73,
-  "top_mutations": [
-    "P90_M",
-    "P84_A",
-    "P84_V",
-    "P54_V",
-    "P71_V",
-    "P33_F",
-    "P24_I",
-    "P48_V",
-    "P10_I",
-    "P71_I"
-  ]
+  "group": "PI",
+  "samples_total": 2084,
+  "samples_train": 1667,
+  "samples_test": 417,
+  "accuracy": 0.9233,
+  "precision": 0.8769,
+  "recall": 0.9553,
+  "f1_score": 0.9144,
+  "auc": 0.9798,
+  "rmse": 0.2569,
+  "r2": 0.8732
 }

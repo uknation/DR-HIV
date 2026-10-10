@@ -3,7 +3,7 @@ import {
   ShieldAlert, Activity, Users, FileText, Settings, LogOut, CheckCircle,
   AlertTriangle, Search, Plus, Trash2, ArrowRight, Download, BarChart2,
   Database, Play, Save, ChevronRight, ChevronLeft, PanelLeft, Menu, FileSpreadsheet, Lock, RefreshCw, X,
-  Upload, Award, Sparkles, Dna, Copy, Check
+  Upload, Award, Sparkles, Dna, Copy, Check, Home, Bell, ChevronDown, CheckCircle2, TrendingUp, User, Sun
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
@@ -15,7 +15,10 @@ import ModelBenchmarkModal from './components/ModelBenchmarkModal';
 import ModelBenchmarkPage from './components/ModelBenchmarkPage';
 import Pagination from './components/Pagination';
 import LandingPage from './components/LandingPage';
-import { API_BASE } from './config';
+import purpleRibbonImg from './assets/purple_ribbon.png';
+import lavenderDnaImg from './assets/lavender_dna.png';
+
+const API_BASE = '/api';
 
 export default function App() {
   // Auth state - persist session in localStorage to prevent logout on page refresh
@@ -31,6 +34,9 @@ export default function App() {
   const [loginEmail, setLoginEmail] = useState('doctor@hivclinic.org');
   const [loginPassword, setLoginPassword] = useState('clinicalpass123');
   const [loginError, setLoginError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [doctorDropdownOpen, setDoctorDropdownOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   // Navigation & Layout with URL route synchronization
   const getInitialTab = () => {
@@ -164,9 +170,9 @@ export default function App() {
         setNewCaseCreatinine(c.serum_creatinine || 1.0);
         setNewCaseIsPregnant(c.is_pregnant || false);
         setNewCaseRef(`${c.patient_ref}-V2`);
-        setSearchPatientFeedback(`✅ Found record for ${c.patient_ref} (${data.total_previous_tests} prior test). Baseline clinical history and resistance data loaded.`);
+        setSearchPatientFeedback(`âœ… Found record for ${c.patient_ref} (${data.total_previous_tests} prior test). Baseline clinical history and resistance data loaded.`);
       } else {
-        setSearchPatientFeedback(`ℹ️ No prior digital record found for '${q}'. You can proceed with the new test ID.`);
+        setSearchPatientFeedback(`â„¹ï¸ No prior digital record found for '${q}'. You can proceed with the new test ID.`);
       }
     } catch (err) {
       setSearchPatientFeedback('Error connecting to search service.');
@@ -318,7 +324,7 @@ export default function App() {
       const updatedUser = await res.json();
       setCurrentUser(updatedUser);
       localStorage.setItem('hiv_app_user', JSON.stringify(updatedUser));
-      setProfileSuccessMsg('✅ Doctor Profile updated successfully! All changes persisted to clinical database.');
+      setProfileSuccessMsg('âœ… Doctor Profile updated successfully! All changes persisted to clinical database.');
       setIsEditProfileModalOpen(false);
       setTimeout(() => setProfileSuccessMsg(''), 5000);
     } catch (err) {
@@ -347,7 +353,7 @@ export default function App() {
         const errData = await res.json();
         throw new Error(errData.detail || 'Password change failed.');
       }
-      setPasswordChangeMsg('✅ Security Password updated successfully!');
+      setPasswordChangeMsg('âœ… Security Password updated successfully!');
       setOldPassword('');
       setNewPassword('');
       setTimeout(() => setPasswordChangeMsg(''), 5000);
@@ -703,8 +709,8 @@ export default function App() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white p-4">
         <div className="flex items-center space-x-3 mb-4">
-          <div className="bg-teal-500/20 p-3 rounded-full border border-teal-500/30">
-            <Activity className="h-8 w-8 text-teal-400 animate-spin" />
+          <div className="bg-[#55175E]/20 p-3 rounded-full border border-[#55175E]/30">
+            <Activity className="h-8 w-8 text-[#EDE3FA] animate-spin" />
           </div>
           <span className="text-xl font-bold tracking-wide">HIV ART Regimen Advisory</span>
         </div>
@@ -731,223 +737,332 @@ export default function App() {
   }
 
   // APP LAYOUT WITH SIDEBAR AND HEADER
+  const filteredCases = cases.filter(c => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    const ref = (c.patient_ref || '').toLowerCase();
+    const hist = (c.treatment_history || '').toLowerCase();
+    const muts = (c.genotype?.mutation_list || '').toLowerCase();
+    const vl = String(c.viral_load || '').toLowerCase();
+    return ref.includes(q) || hist.includes(q) || muts.includes(q) || vl.includes(q);
+  });
+  const paginatedCases = filteredCases.slice((casesCurrentPage - 1) * casesPerPage, casesCurrentPage * casesPerPage);
+
   return (
-    <div className="app-viewport bg-slate-50 text-slate-800">
+    <div className="app-viewport bg-[#FBFBFE] text-[#17233B]">
+      
+      {/* 1. SIDEBAR NAVIGATION */}
+      <aside className={`app-sidebar ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`}>
+        {/* Sidebar Brand Header */}
+        <div className="p-4 sm:p-4.5 border-b border-[#E5EAF0] flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center space-x-2.5 overflow-hidden">
+            <img
+              src={purpleRibbonImg}
+              alt="DR-HIV Ribbon"
+              className="h-8 w-auto object-contain flex-shrink-0 drop-shadow-[0_2px_6px_rgba(85,23,94,0.18)]"
+            />
+            {!isSidebarCollapsed && (
+              <div className="overflow-hidden text-left leading-none">
+                <span className="text-lg font-black tracking-tight text-[#17233B] block">DR-HIV</span>
+                <span className="text-[9px] font-bold text-[#64748B] mt-1 block tracking-wider">Clinical Decision Support</span>
+              </div>
+            )}
+          </div>
 
-      {/* PERSISTENT CLINICAL WARNING BANNER */}
-      <div className="bg-slate-900 border-b border-slate-800 text-slate-300 px-6 py-2.5 text-xs font-semibold flex justify-between items-center z-10 flex-shrink-0">
-        <div className="flex items-center space-x-2">
-          <ShieldAlert className="h-4 w-4 text-teal-400 flex-shrink-0" />
-          <span><b>Clinical Decision Support:</b>HIV Drug Resistance Prediction & Regimen Advisory. For clinical training & demonstration only.</span>
+          <button
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            className="p-1.5 text-[#94A3B8] hover:text-[#55175E] hover:bg-slate-50 rounded-lg transition ml-1 flex-shrink-0"
+            title={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isSidebarCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <PanelLeft className="h-4 w-4" />
+            )}
+          </button>
         </div>
-        <span className="px-2 py-0.5 text-[10px] rounded bg-slate-800 text-slate-400 border border-slate-700 flex-shrink-0">SIH 2026 Concept</span>
-      </div>
 
-      <div className="flex-1 flex overflow-hidden relative min-h-0">
+        {/* Sidebar Navigation Links */}
+        <nav className="app-sidebar-nav space-y-1">
+          {[
+            { id: 'dashboard', label: 'Dashboard', icon: Home, onClick: () => setActiveTab('dashboard') },
+            { id: 'new_analysis', label: 'New Analysis', icon: FileText, onClick: () => { setActiveTab('new_analysis'); setAnalysisStep(1); setAnalysisResult(null); } },
+            { id: 'model_info', label: 'Model Information', icon: BarChart2, onClick: () => setActiveTab('model_info') },
+            { id: 'model_benchmark', label: 'Model Benchmarks', icon: TrendingUp, onClick: () => setActiveTab('model_benchmark') },
+            { id: 'dataset', label: 'Dataset Preview', icon: Database, onClick: () => setActiveTab('dataset') },
+            { id: 'kb_settings', label: 'Clinical Rules Config', icon: Sparkles, onClick: () => setActiveTab('kb_settings') },
+            { id: 'profile', label: 'Doctor Profile', icon: User, onClick: () => setActiveTab('profile') },
+          ].map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={item.onClick}
+                title={item.label}
+                className={`app-nav-btn ${
+                  isActive
+                    ? 'bg-[#F3E8FF] text-[#55175E] border-l-4 border-[#55175E] rounded-r-xl font-bold shadow-sm'
+                    : 'text-[#64748B] hover:text-[#55175E] hover:bg-[#FAF7FD] rounded-xl'
+                } ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-3.5'}`}
+              >
+                <Icon className={`h-4 w-4 flex-shrink-0 ${isActive ? 'text-[#55175E]' : 'text-[#64748B]'}`} />
+                {!isSidebarCollapsed && <span className="truncate">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
 
-        {/* SIDEBAR NAVIGATION */}
-        <aside className={`app-sidebar ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`}>
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between flex-shrink-0">
-            <div className="flex items-center space-x-2.5 overflow-hidden">
-              <div className="bg-teal-900 p-2 rounded-lg text-teal-400 flex-shrink-0">
-                <Activity className="h-5 w-5" />
-              </div>
-              {!isSidebarCollapsed && (
-                <div className="overflow-hidden">
-                  <h1 className="text-white text-xs font-bold leading-tight truncate">HIV Advisory System</h1>
-                  <span className="text-[9px] uppercase font-bold text-teal-500 tracking-wider block">SIH 2026 Prototype</span>
-                </div>
-              )}
+        {/* Sidebar Footer User Widget */}
+        <div className={`mt-auto p-3 m-2 border-t border-[#E5EAF0] flex items-center flex-shrink-0 ${isSidebarCollapsed ? 'justify-center flex-col space-y-2' : 'justify-between'}`}>
+          <div
+            className="flex items-center space-x-2.5 overflow-hidden cursor-pointer hover:opacity-90 transition"
+            onClick={() => setActiveTab('profile')}
+            title="View Doctor Profile"
+          >
+            <div className="w-8 h-8 rounded-full bg-[#55175E] text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+              SJ
             </div>
-
-            <button
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition ml-1 flex-shrink-0"
-              title={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {isSidebarCollapsed ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <PanelLeft className="h-4 w-4" />
-              )}
-            </button>
+            {!isSidebarCollapsed && (
+              <div className="overflow-hidden text-left leading-tight">
+                <p className="text-xs font-bold text-[#17233B] truncate">{currentUser?.full_name || "Dr. Sarah Jenkins, MD"}</p>
+                <span className="text-[10px] font-semibold text-[#55175E] block truncate">HIV Specialist</span>
+              </div>
+            )}
           </div>
-
-          <nav className="app-sidebar-nav space-y-1.5">
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              title="Dashboard"
-              className={`app-nav-btn ${activeTab === 'dashboard' ? 'bg-teal-600 text-white shadow' : 'hover:bg-slate-800 hover:text-white text-slate-400'} ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-4'}`}
-            >
-              <Users className="h-4 w-4 flex-shrink-0" />
-              {!isSidebarCollapsed && <span className="truncate">Dashboard</span>}
-            </button>
-
-            <button
-              onClick={() => { setActiveTab('new_analysis'); setAnalysisStep(1); setAnalysisResult(null); }}
-              title="New Analysis"
-              className={`app-nav-btn ${activeTab === 'new_analysis' ? 'bg-teal-600 text-white shadow' : 'hover:bg-slate-800 hover:text-white text-slate-400'} ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-4'}`}
-            >
-              <Play className="h-4 w-4 flex-shrink-0" />
-              {!isSidebarCollapsed && <span className="truncate">New Analysis</span>}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('model_info')}
-              title="Model Information"
-              className={`app-nav-btn ${activeTab === 'model_info' ? 'bg-teal-600 text-white shadow' : 'hover:bg-slate-800 hover:text-white text-slate-400'} ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-4'}`}
-            >
-              <BarChart2 className="h-4 w-4 flex-shrink-0" />
-              {!isSidebarCollapsed && <span className="truncate">Model Information</span>}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('model_benchmark')}
-              title="Model Benchmarks"
-              className={`app-nav-btn ${activeTab === 'model_benchmark' ? 'bg-teal-600 text-white shadow' : 'hover:bg-slate-800 hover:text-white text-slate-400'} ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-4'}`}
-            >
-              <Award className="h-4 w-4 flex-shrink-0" />
-              {!isSidebarCollapsed && <span className="truncate">Model Benchmarks</span>}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('dataset')}
-              title="Dataset Preview"
-              className={`app-nav-btn ${activeTab === 'dataset' ? 'bg-teal-600 text-white shadow' : 'hover:bg-slate-800 hover:text-white text-slate-400'} ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-4'}`}
-            >
-              <Database className="h-4 w-4 flex-shrink-0" />
-              {!isSidebarCollapsed && <span className="truncate">Dataset Preview</span>}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('kb_settings')}
-              title="Clinical Rules Config"
-              className={`app-nav-btn ${activeTab === 'kb_settings' ? 'bg-teal-600 text-white shadow' : 'hover:bg-slate-800 hover:text-white text-slate-400'} ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-4'}`}
-            >
-              <Settings className="h-4 w-4 flex-shrink-0" />
-              {!isSidebarCollapsed && <span className="truncate">Clinical Rules Config</span>}
-            </button>
-
-            <button
+          {!isSidebarCollapsed && (
+            <ChevronRight
+              className="h-4 w-4 text-[#94A3B8] flex-shrink-0 cursor-pointer hover:text-[#55175E] transition"
               onClick={() => setActiveTab('profile')}
-              title="Doctor Profile"
-              className={`app-nav-btn ${activeTab === 'profile' ? 'bg-teal-600 text-white shadow' : 'hover:bg-slate-800 hover:text-white text-slate-400'} ${isSidebarCollapsed ? 'justify-center px-0' : 'space-x-3 px-4'}`}
-            >
-              <Users className="h-4 w-4 flex-shrink-0" />
-              {!isSidebarCollapsed && <span className="truncate">Doctor Profile</span>}
-            </button>
-          </nav>
+            />
+          )}
+        </div>
+      </aside>
 
-          <div className={`app-sidebar-footer mt-auto p-4 border-t border-slate-800 bg-slate-950 flex items-center flex-shrink-0 ${isSidebarCollapsed ? 'justify-center flex-col space-y-2' : 'justify-between'}`}>
-            <div className="flex items-center space-x-2 overflow-hidden cursor-pointer hover:opacity-90 transition" onClick={() => setActiveTab('profile')} title="View Doctor Profile">
-              <div className="w-8 h-8 rounded-full bg-teal-700 flex items-center justify-center font-bold text-white text-xs flex-shrink-0">
-                SJ
-              </div>
-              {!isSidebarCollapsed && (
-                <div className="overflow-hidden">
-                  <p className="text-white text-xs font-bold truncate leading-tight">{currentUser?.full_name || "Dr. S. Jenkins"}</p>
-                  <span className="text-[10px] text-teal-400 block truncate">HIV Specialist</span>
+      {/* 2. MAIN WORKSPACE */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Header Bar */}
+        <header className="bg-white border-b border-[#E5EAF0] px-6 lg:px-8 py-3.5 flex items-center justify-between flex-shrink-0 z-10">
+          {/* Search Input */}
+          <div className="relative w-full max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
+              <Search className="h-4 w-4" />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search patient ID, case, or analysis..."
+              className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-[#F8FAFC] border border-[#E5EAF0] rounded-xl text-[#17233B] placeholder-[#94A3B8] focus:outline-none focus:border-[#55175E] focus:ring-1 focus:ring-[#55175E] focus:bg-white transition"
+            />
+          </div>
+
+          {/* Right Section: Notification & Doctor Profile */}
+          <div className="flex items-center space-x-5">
+            <button
+              type="button"
+              onClick={() => setNotificationsOpen(!notificationsOpen)}
+              className="relative p-1.5 text-[#64748B] hover:text-[#55175E] hover:bg-slate-50 rounded-lg transition focus:outline-none"
+              title="Notifications"
+            >
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white" />
+            </button>
+
+            {/* Doctor User Dropdown Pill */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
+                className="flex items-center space-x-2.5 hover:opacity-90 transition p-1 rounded-lg focus:outline-none select-none"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#55175E] text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+                  SJ
+                </div>
+                <div className="hidden sm:flex flex-col text-left leading-tight">
+                  <span className="text-xs font-bold text-[#17233B]">{currentUser?.full_name || 'Dr. Sarah Jenkins, MD'}</span>
+                  <span className="text-[10px] font-semibold text-[#55175E]">HIV Specialist</span>
+                </div>
+                <ChevronDown className="h-3.5 w-3.5 text-[#64748B]" />
+              </button>
+
+              {doctorDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-white border border-[#E5EAF0] rounded-xl shadow-xl py-2 z-50 text-xs animate-fadeIn">
+                  <button
+                    onClick={() => { setActiveTab('profile'); setDoctorDropdownOpen(false); }}
+                    className="w-full text-left px-4 py-2 hover:bg-[#FAF7FD] hover:text-[#55175E] font-medium flex items-center space-x-2"
+                  >
+                    <User className="h-3.5 w-3.5 text-[#55175E]" />
+                    <span>Doctor Profile</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab('kb_settings'); setDoctorDropdownOpen(false); }}
+                    className="w-full text-left px-4 py-2 hover:bg-[#FAF7FD] hover:text-[#55175E] font-medium flex items-center space-x-2"
+                  >
+                    <Settings className="h-3.5 w-3.5 text-[#55175E]" />
+                    <span>Clinical Settings</span>
+                  </button>
+                  <div className="border-t border-[#E5EAF0] my-1" />
+                  <button
+                    onClick={() => { handleLogout(); setDoctorDropdownOpen(false); }}
+                    className="w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 font-medium flex items-center space-x-2"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                    <span>Sign Out</span>
+                  </button>
                 </div>
               )}
             </div>
-            <button
-              onClick={handleLogout}
-              className="p-2 text-slate-500 hover:text-rose-400 hover:bg-slate-900 rounded-lg transition flex-shrink-0"
-              title="Logout"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
           </div>
-        </aside>
+        </header>
 
-        {/* MAIN BODY AREA */}
+        {/* Scrollable Main Workspace */}
         <main className="app-main-scroll">
-
-          <header className="bg-white border-b border-slate-200 px-8 py-5 flex justify-between items-center flex-shrink-0">
-            <div className="flex items-center space-x-3">
-              <div>
-                <h2 className="text-xl font-bold text-slate-800">
-                  {activeTab === 'dashboard' && 'Clinician Dashboard'}
-                  {activeTab === 'new_analysis' && 'Genotype Guided Regimen ranking Wizard'}
-                  {activeTab === 'model_info' && 'ML Performance Record'}
-                  {activeTab === 'model_benchmark' && 'Clinical AI Engine Benchmark & Validation'}
-                  {activeTab === 'dataset' && 'Dataset Exploration Panel'}
-                  {activeTab === 'kb_settings' && 'Clinical Knowledge Base Settings'}
-                  {activeTab === 'profile' && 'Doctor Profile & Clinical Credentials'}
-                </h2>
-                <p className="text-xs text-slate-500">Authorized: National AIDS Control Programme Care Network</p>
+          <div className="flex-1 p-6 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
+            
+            {/* Subheader when not on dashboard */}
+            {activeTab !== 'dashboard' && (
+              <div className="bg-white rounded-2xl border border-[#E5EAF0] p-6 shadow-sm flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-[#17233B]">
+                    {activeTab === 'new_analysis' && 'Genotype Guided Regimen ranking Wizard'}
+                    {activeTab === 'model_info' && 'ML Performance Record'}
+                    {activeTab === 'model_benchmark' && 'Clinical AI Engine Benchmark & Validation'}
+                    {activeTab === 'dataset' && 'Dataset Exploration Panel'}
+                    {activeTab === 'kb_settings' && 'Clinical Knowledge Base Settings'}
+                    {activeTab === 'profile' && 'Doctor Profile & Clinical Credentials'}
+                  </h2>
+                  <p className="text-xs text-[#64748B] mt-0.5">Authorized: National AIDS Control Programme Care Network</p>
+                </div>
               </div>
-            </div>
-
-            <div className="flex items-center space-x-4 cursor-pointer" onClick={() => setActiveTab('profile')}>
-              <span className="text-xs text-slate-400 font-semibold hover:text-teal-600 transition">Doctor Profile: {currentUser?.full_name || 'Dr. Sarah Jenkins'}</span>
-            </div>
-          </header>
-
-          <div className="flex-1 p-8 max-w-7xl w-full mx-auto space-y-8">
+            )}
 
             {/* VIEW 1: CLINICIAN DASHBOARD */}
             {activeTab === 'dashboard' && (
-              <div className="space-y-8">
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4 min-h-[110px]">
-                    <div className="bg-teal-50 border border-teal-100 p-3.5 rounded-xl text-teal-600 flex-shrink-0">
-                      <Users className="h-6 w-6" />
+              <div className="space-y-6">
+                
+                {/* Header Banner with DNA Watermark & Motto matching screenshot */}
+                <div className="relative py-2 sm:py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  {/* Translucent Lavender DNA watermark in background on the right */}
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-25 hidden md:block">
+                    <img
+                      src={lavenderDnaImg}
+                      alt=""
+                      className="h-36 w-auto object-contain transform rotate-12"
+                    />
+                  </div>
+
+                  <div className="relative z-10 space-y-1">
+                    <div className="text-[11px] font-extrabold tracking-wider text-[#55175E] uppercase">
+                      AUTHORIZED: NATIONAL AIDS CONTROL PROGRAMME CARE NETWORK
                     </div>
-                    <div className="overflow-hidden">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block whitespace-nowrap">Total Cases</span>
-                      <span className="text-3xl font-extrabold text-slate-900 mt-0.5 block">{cases.length}</span>
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-[#17233B] tracking-tight">
+                      Clinician Dashboard
+                    </h1>
+                    <p className="text-xs sm:text-sm text-[#64748B]">
+                      HIV Drug Resistance Prediction & Regimen Advisory System
+                    </p>
+                  </div>
+                </div>
+
+                {/* Four Metric Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                  {/* Metric 1: Total Cases */}
+                  <div className="bg-white p-5 rounded-2xl border border-[#E5EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center justify-between">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-12 h-12 rounded-xl bg-[#EDE9FE] text-[#55175E] flex items-center justify-center flex-shrink-0">
+                        <Users className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <span className="text-[10.5px] font-bold text-[#64748B] uppercase tracking-wider block">
+                          TOTAL CASES
+                        </span>
+                        <span className="text-2xl sm:text-3xl font-black text-[#17233B] mt-0.5 block leading-tight">
+                          {cases.length}
+                        </span>
+                        <span className="text-[11px] text-[#64748B] block mt-0.5">
+                          Analyzed in the system
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4 min-h-[110px]">
-                    <div className="bg-emerald-50 border border-emerald-100 p-3.5 rounded-xl text-emerald-600 flex-shrink-0">
-                      <CheckCircle className="h-6 w-6" />
-                    </div>
-                    <div className="overflow-hidden">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block whitespace-nowrap">Completed Reviews</span>
-                      <span className="text-3xl font-extrabold text-slate-900 mt-0.5 block">
-                        {cases.filter(c => c.analyses && c.analyses.length > 0 && c.analyses[c.analyses.length - 1].review_status === 'Approved').length}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4 min-h-[110px]">
-                    <div className="bg-amber-50 border border-amber-100 p-3.5 rounded-xl text-amber-600 flex-shrink-0">
-                      <AlertTriangle className="h-6 w-6" />
-                    </div>
-                    <div className="overflow-hidden">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block whitespace-nowrap">Pending Reviews</span>
-                      <span className="text-3xl font-extrabold text-slate-900 mt-0.5 block">
-                        {cases.filter(c => c.analyses && c.analyses.length > 0 && c.analyses[c.analyses.length - 1].review_status === 'Pending').length}
-                      </span>
+                  {/* Metric 2: Completed Reviews */}
+                  <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center justify-between">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-12 h-12 rounded-xl bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center flex-shrink-0">
+                        <CheckCircle2 className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <span className="text-[10.5px] font-bold text-[#64748B] uppercase tracking-wider block">
+                          COMPLETED REVIEWS
+                        </span>
+                        <span className="text-2xl sm:text-3xl font-black text-[#17233B] mt-0.5 block leading-tight">
+                          {cases.filter(c => c.analyses && c.analyses.length > 0 && c.analyses[c.analyses.length - 1].review_status === 'Approved').length}
+                        </span>
+                        <span className="text-[11px] text-[#64748B] block mt-0.5">
+                          Cases reviewed by you
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4 min-h-[110px]">
-                    <div className="bg-rose-50 border border-rose-100 p-3.5 rounded-xl text-rose-600 flex-shrink-0">
-                      <ShieldAlert className="h-6 w-6" />
+                  {/* Metric 3: Pending Reviews */}
+                  <div className="bg-white p-5 rounded-2xl border border-amber-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center justify-between">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-12 h-12 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center flex-shrink-0">
+                        <AlertTriangle className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <span className="text-[10.5px] font-bold text-[#D97706] uppercase tracking-wider block">
+                          PENDING REVIEWS
+                        </span>
+                        <span className="text-2xl sm:text-3xl font-black text-[#17233B] mt-0.5 block leading-tight">
+                          {cases.filter(c => c.analyses && c.analyses.length > 0 && c.analyses[c.analyses.length - 1].review_status === 'Pending').length}
+                        </span>
+                        <span className="text-[11px] text-[#64748B] block mt-0.5">
+                          Awaiting your review
+                        </span>
+                      </div>
                     </div>
-                    <div className="overflow-hidden">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block whitespace-nowrap">Low Confidence Flags</span>
-                      <span className="text-3xl font-extrabold text-slate-900 mt-0.5 block">
-                        {cases.filter(c => c.analyses && c.analyses.length > 0 && c.analyses[c.analyses.length - 1].low_confidence_flag).length}
-                      </span>
+                  </div>
+
+                  {/* Metric 4: Low Confidence Flags */}
+                  <div className="bg-white p-5 rounded-2xl border border-rose-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center justify-between">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-12 h-12 rounded-xl bg-[#FEE2E2] text-[#EF4444] flex items-center justify-center flex-shrink-0">
+                        <ShieldAlert className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <span className="text-[10.5px] font-bold text-[#EF4444] uppercase tracking-wider block">
+                          LOW CONFIDENCE FLAGS
+                        </span>
+                        <span className="text-2xl sm:text-3xl font-black text-[#17233B] mt-0.5 block leading-tight">
+                          {cases.filter(c => c.analyses && c.analyses.length > 0 && c.analyses[c.analyses.length - 1].low_confidence_flag).length}
+                        </span>
+                        <span className="text-[11px] text-[#64748B] block mt-0.5">
+                          Require attention
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Recent Cases Section */}
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                  <div className="px-6 py-4 border-b border-slate-200 flex flex-wrap sm:flex-nowrap justify-between items-center gap-3 bg-white">
-                    <div className="flex items-center space-x-2">
-                      <FileText className="h-4 w-4 text-teal-600 flex-shrink-0" />
-                      <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wider">Recent Clinician Analyses</h3>
+                <div className="bg-white rounded-2xl border border-[#E5EAF0] shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
+                  <div className="px-6 py-5 border-b border-[#E5EAF0] flex flex-wrap sm:flex-nowrap justify-between items-center gap-4 bg-white">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2.5 rounded-xl bg-[#FAF7FD] border border-[#E5D7F5] text-[#55175E]">
+                        <FileText className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-[#17233B] text-base sm:text-lg">Recent Clinician Analyses</h3>
+                        <p className="text-xs text-[#64748B]">Latest HIV genotype analyses and prediction results</p>
+                      </div>
                     </div>
                     <button
                       onClick={() => { setActiveTab('new_analysis'); setAnalysisStep(1); }}
-                      className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-lg shadow-sm flex items-center space-x-2 transition flex-shrink-0"
+                      className="px-5 py-2.5 bg-[#55175E] hover:bg-[#421047] text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center space-x-2 transition flex-shrink-0 cursor-pointer"
                     >
                       <Plus className="h-4 w-4" />
                       <span>New Analysis Case</span>
@@ -956,70 +1071,78 @@ export default function App() {
 
                   <div className="overflow-x-auto w-full">
                     {loadingCases ? (
-                      <div className="p-8 text-center text-slate-400 font-semibold flex items-center justify-center space-x-2">
-                        <RefreshCw className="h-5 w-5 animate-spin" />
-                        <span>Loading cases...</span>
+                      <div className="p-10 text-center text-[#64748B] font-semibold flex items-center justify-center space-x-2">
+                        <RefreshCw className="h-5 w-5 animate-spin text-[#55175E]" />
+                        <span>Loading clinical cases...</span>
                       </div>
-                    ) : cases.length === 0 ? (
-                      <div className="p-12 text-center text-slate-400 font-medium">
-                        No patient cases submitted yet. Click "New Analysis Case" to begin.
+                    ) : filteredCases.length === 0 ? (
+                      <div className="p-12 text-center text-[#64748B] font-medium">
+                        {searchQuery ? `No cases matching "${searchQuery}" found.` : 'No patient cases submitted yet. Click "New Analysis Case" to begin.'}
                       </div>
                     ) : (
                       <table className="w-full text-left border-collapse min-w-[950px]">
                         <thead>
-                          <tr className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase border-b border-slate-200">
-                            <th className="px-4 py-3.5 whitespace-nowrap">Case ID / Patient Ref</th>
-                            <th className="px-4 py-3.5 whitespace-nowrap">CD4 Count</th>
-                            <th className="px-4 py-3.5 whitespace-nowrap">Viral Load</th>
-                            <th className="px-4 py-3.5 whitespace-nowrap">Treatment History</th>
-                            <th className="px-4 py-3.5 whitespace-nowrap">Mutations Detected</th>
-                            <th className="px-4 py-3.5 whitespace-nowrap">Review Status</th>
-                            <th className="px-4 py-3.5 whitespace-nowrap text-right">Action</th>
+                          <tr className="border-b border-[#E5EAF0] text-[10.5px] font-bold text-[#64748B] uppercase tracking-wider">
+                            <th className="px-6 py-4 whitespace-nowrap">Case ID / Patient Ref</th>
+                            <th className="px-6 py-4 whitespace-nowrap">CD4 Count</th>
+                            <th className="px-6 py-4 whitespace-nowrap">Viral Load</th>
+                            <th className="px-6 py-4 whitespace-nowrap">Treatment History</th>
+                            <th className="px-6 py-4 whitespace-nowrap">Mutations Detected</th>
+                            <th className="px-6 py-4 whitespace-nowrap">Review Status</th>
+                            <th className="px-6 py-4 whitespace-nowrap text-right">Action</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 text-xs">
-                          {cases.slice((casesCurrentPage - 1) * casesPerPage, casesCurrentPage * casesPerPage).map((c) => {
+                        <tbody className="divide-y divide-[#F1F5F9] text-xs">
+                          {paginatedCases.map((c) => {
                             const lastAnalysis = c.analyses && c.analyses.length > 0 ? c.analyses[c.analyses.length - 1] : null;
                             const reviewStatus = lastAnalysis ? lastAnalysis.review_status : 'No Analysis';
 
                             return (
-                              <tr key={c.id} className="hover:bg-slate-50/80 transition-colors">
-                                <td className="px-4 py-3.5 font-bold text-slate-900 whitespace-nowrap">{c.patient_ref}</td>
-                                <td className="px-4 py-3.5 whitespace-nowrap text-slate-700 font-medium">
-                                  {c.cd4_count ? `${c.cd4_count} cells/µL` : 'Unknown'}
+                              <tr key={c.id} className="hover:bg-slate-50/70 transition-colors">
+                                <td className="px-6 py-4 font-bold text-[#17233B] whitespace-nowrap">{c.patient_ref}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-[#17233B] font-medium">
+                                  {c.cd4_count ? `${c.cd4_count} cells/ÂµL` : 'Unknown'}
                                 </td>
-                                <td className="px-4 py-3.5 whitespace-nowrap">
-                                  <span className={`px-2.5 py-1 font-bold rounded-md text-[11px] inline-block ${c.viral_load === 'High' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}`}>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <span className={`px-3 py-0.5 rounded-full text-xs font-semibold inline-block ${
+                                    c.viral_load === 'High'
+                                      ? 'bg-rose-50 text-rose-600 border border-rose-100'
+                                      : 'bg-slate-100 text-slate-700'
+                                  }`}>
                                     {c.viral_load}
                                   </span>
                                 </td>
-                                <td className="px-4 py-3.5 whitespace-nowrap text-slate-700 font-medium">
+                                <td className="px-6 py-4 whitespace-nowrap text-slate-700 font-medium">
                                   {c.treatment_history ? c.treatment_history.replace(/_/g, ' ') : 'None'}
                                 </td>
-                                <td className="px-4 py-3.5 max-w-xs font-semibold text-slate-700 truncate" title={c.genotype ? c.genotype.mutation_list.replace(/;/g, ', ') : 'None'}>
-                                  {c.genotype ? c.genotype.mutation_list.replace(/;/g, ', ') : <span className="text-slate-400 font-normal">None</span>}
+                                <td className="px-6 py-4 max-w-xs font-medium text-slate-700 truncate" title={c.genotype ? c.genotype.mutation_list.replace(/;/g, ', ') : 'None'}>
+                                  {c.genotype?.mutation_list ? (
+                                    c.genotype.mutation_list.replace(/;/g, ', ')
+                                  ) : (
+                                    <span className="text-slate-400">None</span>
+                                  )}
                                 </td>
-                                <td className="px-4 py-3.5 whitespace-nowrap">
+                                <td className="px-6 py-4 whitespace-nowrap">
                                   {reviewStatus === 'Approved' && (
-                                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center space-x-1 whitespace-nowrap">
-                                      <CheckCircle className="h-3 w-3" />
+                                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 inline-flex items-center space-x-1.5 whitespace-nowrap">
+                                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                                       <span>Approved</span>
                                     </span>
                                   )}
                                   {reviewStatus === 'Pending' && (
-                                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center space-x-1 whitespace-nowrap">
-                                      <AlertTriangle className="h-3 w-3 animate-pulse" />
+                                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-100 inline-flex items-center space-x-1.5 whitespace-nowrap">
+                                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 animate-pulse" />
                                       <span>Pending Review</span>
                                     </span>
                                   )}
                                   {reviewStatus === 'No Analysis' && (
-                                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200 inline-flex items-center space-x-1 whitespace-nowrap">
-                                      <Activity className="h-3 w-3 text-slate-400" />
+                                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-[#F1F5F9] text-[#64748B] inline-flex items-center space-x-1.5 whitespace-nowrap">
+                                      <Activity className="h-3.5 w-3.5 text-purple-400" />
                                       <span>Genotype Pending</span>
                                     </span>
                                   )}
                                 </td>
-                                <td className="px-4 py-3.5 whitespace-nowrap text-right">
+                                <td className="px-6 py-4 whitespace-nowrap text-right">
                                   {lastAnalysis ? (
                                     <button
                                       onClick={() => {
@@ -1030,9 +1153,9 @@ export default function App() {
                                         setAnalysisStep(6);
                                         setActiveTab('new_analysis');
                                       }}
-                                      className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-md font-bold text-xs transition inline-flex items-center space-x-1"
+                                      className="px-3.5 py-1.5 bg-white hover:bg-[#FAF7FD] text-[#55175E] border border-[#D8B4FE] rounded-lg font-semibold text-xs transition inline-flex items-center space-x-1.5 shadow-sm cursor-pointer"
                                     >
-                                      <FileText className="h-3 w-3" />
+                                      <FileText className="h-3.5 w-3.5" />
                                       <span>View Review</span>
                                     </button>
                                   ) : (
@@ -1044,9 +1167,9 @@ export default function App() {
                                         setAnalysisStep(2);
                                         setActiveTab('new_analysis');
                                       }}
-                                      className="px-3 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-md font-bold text-xs transition inline-flex items-center space-x-1"
+                                      className="px-3.5 py-1.5 bg-white hover:bg-[#FAF7FD] text-[#55175E] border border-[#D8B4FE] rounded-lg font-semibold text-xs transition inline-flex items-center space-x-1.5 shadow-sm cursor-pointer"
                                     >
-                                      <Play className="h-3 w-3" />
+                                      <Play className="h-3 w-3 fill-[#55175E]/20" />
                                       <span>Input Genotype</span>
                                     </button>
                                   )}
@@ -1062,12 +1185,13 @@ export default function App() {
                   {/* Pagination Footer */}
                   <Pagination
                     currentPage={casesCurrentPage}
-                    totalRecords={cases.length}
+                    totalRecords={filteredCases.length}
                     itemsPerPage={casesPerPage}
                     onPageChange={setCasesCurrentPage}
                     label="cases"
                   />
                 </div>
+
               </div>
             )}
 
@@ -1089,7 +1213,7 @@ export default function App() {
                         { step: 6, name: 'Review' }
                       ].map((item) => (
                         <div key={item.step} className="flex items-center space-x-2">
-                          <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${analysisStep === item.step ? 'bg-teal-600 text-white shadow' : analysisStep > item.step ? 'bg-teal-100 text-teal-800' : 'bg-slate-100 text-slate-400'}`}>
+                          <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${analysisStep === item.step ? 'bg-[#55175E] text-white shadow' : analysisStep > item.step ? 'bg-[#EDE3FA] text-[#55175E]' : 'bg-slate-100 text-slate-400'}`}>
                             {item.step}
                           </span>
                           <span className={`text-xs font-semibold whitespace-nowrap ${analysisStep === item.step ? 'text-slate-800' : 'text-slate-400'}`}>
@@ -1115,7 +1239,7 @@ export default function App() {
                       <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-bold text-slate-700 uppercase flex items-center space-x-1.5">
-                            <Search className="h-3.5 w-3.5 text-teal-600" />
+                            <Search className="h-3.5 w-3.5 text-[#55175E]" />
                             <span>Returning Patient? Search Existing Physical File ID</span>
                           </span>
                           <span className="text-[11px] text-slate-400 font-semibold">Zero PII Disclosed</span>
@@ -1127,7 +1251,7 @@ export default function App() {
                             onChange={(e) => setSearchPatientQuery(e.target.value)}
                             onKeyDown={(e) => { if (e.key === 'Enter') handleSearchPatient(); }}
                             placeholder="Enter PatientTestId from physical OPD card (e.g. HIV-2026-X84J9)..."
-                            className="flex-1 px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono text-slate-800"
+                            className="flex-1 px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] font-mono text-slate-800"
                           />
                           <button
                             type="button"
@@ -1140,16 +1264,16 @@ export default function App() {
                           </button>
                         </div>
                         {searchPatientFeedback && (
-                          <p className="text-xs font-medium text-teal-700 mt-1">{searchPatientFeedback}</p>
+                          <p className="text-xs font-medium text-[#55175E] mt-1">{searchPatientFeedback}</p>
                         )}
                       </div>
 
                       {/* AUTOMATED PATIENT TEST ID & PHYSICAL NOTE-DOWN CARD */}
-                      <div className="bg-teal-50/70 border border-teal-200 rounded-xl p-5 space-y-3">
+                      <div className="bg-[#FAF7FD]/70 border border-[#D8C6EE] rounded-xl p-5 space-y-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse"></span>
-                            <span className="text-xs font-bold text-teal-900 uppercase tracking-wider">
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#55175E] animate-pulse"></span>
+                            <span className="text-xs font-bold text-[#421047] uppercase tracking-wider">
                               Automated PatientTestId (De-Identified)
                             </span>
                           </div>
@@ -1157,7 +1281,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={generateNewPatientId}
-                              className="text-xs text-teal-700 hover:text-teal-900 font-bold hover:underline flex items-center space-x-1"
+                              className="text-xs text-[#55175E] hover:text-[#421047] font-bold hover:underline flex items-center space-x-1"
                             >
                               <RefreshCw className="h-3 w-3" />
                               <span>Generate New</span>
@@ -1165,7 +1289,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={handleCopyId}
-                              className="px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-md shadow-xs transition flex items-center space-x-1"
+                              className="px-2.5 py-1 bg-[#55175E] hover:bg-[#421047] text-white text-xs font-bold rounded-md shadow-xs transition flex items-center space-x-1"
                             >
                               {copiedId ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                               <span>{copiedId ? 'Copied!' : 'Copy ID'}</span>
@@ -1184,15 +1308,15 @@ export default function App() {
                           />
                         </div>
 
-                        <div className="bg-white/80 border border-teal-100 rounded-lg p-3 space-y-1.5 text-xs text-slate-600">
+                        <div className="bg-white/80 border border-[#EDE3FA] rounded-lg p-3 space-y-1.5 text-xs text-slate-600">
                           <div className="flex items-start space-x-2">
-                            <span className="text-sm">✍️</span>
+                            <span className="text-sm">âœï¸</span>
                             <div>
                               <strong className="text-slate-800">Note Down on Physical File:</strong> Write this unique ID directly onto the patient's physical paper OPD card or ART clinic folder. Next time the patient visits, enter this ID above to retrieve their clinical record without re-typing.
                             </div>
                           </div>
-                          <div className="flex items-center space-x-1.5 text-[11px] text-teal-800 font-semibold pt-1 border-t border-teal-100">
-                            <Lock className="h-3 w-3 text-teal-600" />
+                          <div className="flex items-center space-x-1.5 text-[11px] text-[#55175E] font-semibold pt-1 border-t border-[#EDE3FA]">
+                            <Lock className="h-3 w-3 text-[#55175E]" />
                             <span>Privacy Guarantee: Zero Personally Identifiable Information (No PII) stored. Complies with NACO, HIPAA & DPDP Act 2023.</span>
                           </div>
                         </div>
@@ -1212,7 +1336,7 @@ export default function App() {
                                 </h4>
                               </div>
                               <p className="text-xs text-slate-500 mt-0.5">
-                                Recorded on {new Date(previousPatientRecord.latest_analysis.created_at).toLocaleDateString()} • {previousPatientRecord.total_previous_tests} prior test(s) on file
+                                Recorded on {new Date(previousPatientRecord.latest_analysis.created_at).toLocaleDateString()} â€¢ {previousPatientRecord.total_previous_tests} prior test(s) on file
                               </p>
                             </div>
 
@@ -1269,7 +1393,7 @@ export default function App() {
                           {/* RESISTANT VS SENSITIVE DRUGS */}
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                             <div className="bg-rose-50/70 border border-rose-200 rounded-lg p-3">
-                              <span className="font-bold text-rose-800 block mb-1">⚠️ High Resistance Detected:</span>
+                              <span className="font-bold text-rose-800 block mb-1">âš ï¸ High Resistance Detected:</span>
                               <div className="flex flex-wrap gap-1">
                                 {Object.entries(previousAnalysisData.pred.drug_predictions || {})
                                   .filter(([_, info]) => {
@@ -1291,7 +1415,7 @@ export default function App() {
                             </div>
 
                             <div className="bg-emerald-50/70 border border-emerald-200 rounded-lg p-3">
-                              <span className="font-bold text-emerald-800 block mb-1">✅ Active / Susceptible Options:</span>
+                              <span className="font-bold text-emerald-800 block mb-1">âœ… Active / Susceptible Options:</span>
                               <div className="flex flex-wrap gap-1">
                                 {Object.entries(previousAnalysisData.pred.drug_predictions || {})
                                   .filter(([_, info]) => {
@@ -1322,12 +1446,12 @@ export default function App() {
                                     </span>
                                     <div>
                                       <span className="font-bold text-slate-800 text-xs block">{reg.name}</span>
-                                      <span className="text-[11px] text-slate-500">{reg.line_tier || 'Recommended'} • {reg.active_agents || 3} Active Drug(s)</span>
+                                      <span className="text-[11px] text-slate-500">{reg.line_tier || 'Recommended'} â€¢ {reg.active_agents || 3} Active Drug(s)</span>
                                     </div>
                                   </div>
 
                                   <div className="text-right">
-                                    <span className="text-xs font-extrabold text-teal-700 block">
+                                    <span className="text-xs font-extrabold text-[#55175E] block">
                                       {reg.score || reg.compatibility_score || 0}% Score
                                     </span>
                                     <span className="text-[10px] text-slate-400">
@@ -1346,13 +1470,13 @@ export default function App() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
                             <label className="min-h-[1.5rem] flex items-end mb-2 text-xs font-bold text-slate-600 uppercase tracking-wide">
-                              CD4 Count (cells/µL)
+                              CD4 Count (cells/ÂµL)
                             </label>
                             <input
                               type="number"
                               value={newCaseCd4}
                               onChange={(e) => setNewCaseCd4(parseInt(e.target.value) || 0)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition"
                               placeholder="CD4 count"
                               required
                             />
@@ -1365,7 +1489,7 @@ export default function App() {
                             <select
                               value={newCaseVl}
                               onChange={(e) => setNewCaseVl(e.target.value)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition cursor-pointer"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition cursor-pointer"
                             >
                               <option value="Low">Low (&lt;1,000 copies/mL)</option>
                               <option value="Moderate">Moderate (1,000 - 10,000 copies/mL)</option>
@@ -1384,7 +1508,7 @@ export default function App() {
                             <select
                               value={newCaseHistory}
                               onChange={(e) => setNewCaseHistory(e.target.value)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition cursor-pointer"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition cursor-pointer"
                             >
                               <option value="Treatment_Naive">Treatment Naive</option>
                               <option value="Previously_Treated">Previously Treated</option>
@@ -1398,7 +1522,7 @@ export default function App() {
                             <select
                               value={newCaseAdherence}
                               onChange={(e) => setNewCaseAdherence(e.target.value)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition cursor-pointer"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition cursor-pointer"
                             >
                               <option value="Good">Good Adherence</option>
                               <option value="Moderate">Moderate Adherence</option>
@@ -1414,7 +1538,7 @@ export default function App() {
                             <select
                               value={newCaseComorbidity}
                               onChange={(e) => setNewCaseComorbidity(e.target.value)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition cursor-pointer"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition cursor-pointer"
                             >
                               <option value="None">None</option>
                               <option value="Present">Present</option>
@@ -1432,7 +1556,7 @@ export default function App() {
                               type="number"
                               value={newCaseAge}
                               onChange={(e) => setNewCaseAge(parseInt(e.target.value) || 0)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition"
                               placeholder="Age"
                               min="1"
                               required
@@ -1447,7 +1571,7 @@ export default function App() {
                               type="number"
                               value={newCaseWeight}
                               onChange={(e) => setNewCaseWeight(parseInt(e.target.value) || 0)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition"
                               placeholder="Weight"
                               min="1"
                               required
@@ -1463,7 +1587,7 @@ export default function App() {
                               step="0.1"
                               value={newCaseCreatinine}
                               onChange={(e) => setNewCaseCreatinine(parseFloat(e.target.value) || 0)}
-                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 transition"
+                              className="w-full h-11 px-3.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 transition"
                               placeholder="Creatinine"
                               min="0.1"
                               required
@@ -1479,7 +1603,7 @@ export default function App() {
                                 type="checkbox"
                                 checked={newCaseIsPregnant}
                                 onChange={(e) => setNewCaseIsPregnant(e.target.checked)}
-                                className="w-4 h-4 text-teal-600 bg-white border-slate-300 rounded focus:ring-teal-500 accent-teal-600 cursor-pointer"
+                                className="w-4 h-4 text-[#55175E] bg-white border-slate-300 rounded focus:ring-[#55175E] accent-teal-600 cursor-pointer"
                                 id="newCaseIsPregnant"
                               />
                               <label htmlFor="newCaseIsPregnant" className="ml-2.5 text-xs text-slate-700 font-semibold cursor-pointer select-none">
@@ -1493,7 +1617,7 @@ export default function App() {
                         <div className="border-t border-slate-100 pt-6 mt-6 flex justify-end">
                           <button
                             onClick={handleCreateCase}
-                            className="inline-flex items-center justify-center space-x-2 px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow-sm hover:shadow transition transform active:scale-[0.99]"
+                            className="inline-flex items-center justify-center space-x-2 px-6 py-2.5 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-sm rounded-lg shadow-sm hover:shadow transition transform active:scale-[0.99]"
                           >
                             <span>Save & Continue</span>
                             <ArrowRight className="h-4 w-4" />
@@ -1526,13 +1650,13 @@ export default function App() {
                         <div className="flex border border-slate-200 rounded-lg overflow-hidden text-xs">
                           <button
                             onClick={() => setGenotypeInputMode('list')}
-                            className={`px-3 py-1.5 font-semibold ${genotypeInputMode === 'list' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                            className={`px-3 py-1.5 font-semibold ${genotypeInputMode === 'list' ? 'bg-[#55175E] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                           >
                             Mutation List
                           </button>
                           <button
                             onClick={() => setGenotypeInputMode('sequence')}
-                            className={`px-3 py-1.5 font-semibold ${genotypeInputMode === 'sequence' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                            className={`px-3 py-1.5 font-semibold ${genotypeInputMode === 'sequence' ? 'bg-[#55175E] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                           >
                             Genotype Sequence
                           </button>
@@ -1591,7 +1715,7 @@ export default function App() {
                               value={rawSequence}
                               onChange={(e) => setRawSequence(e.target.value)}
                               rows={6}
-                              className="w-full pl-3 pr-3 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800"
+                              className="w-full pl-3 pr-3 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800"
                               placeholder="Paste FASTA or raw sequence... (e.g. M184V K103N mutations token parsing)"
                             />
                           </div>
@@ -1640,7 +1764,7 @@ export default function App() {
                           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                             AI Resistance Prediction Engine
                           </label>
-                          <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                          <span className="text-[11px] font-semibold text-[#55175E] bg-[#FAF7FD] px-2 py-0.5 rounded border border-[#D8C6EE]">
                             Active: {selectedModelEngine === 'catboost' ? 'CatBoost Classifier' : selectedModelEngine === 'xgboost' ? 'XGBoost (25 Drugs)' : selectedModelEngine === 'cnn' ? '1D-CNN Sequence-Aware' : selectedModelEngine === 'esm' ? 'ESM-2 Transformer' : 'Hybrid Ensemble'}
                           </span>
                         </div>
@@ -1658,7 +1782,7 @@ export default function App() {
                               onClick={() => setSelectedModelEngine(eng.id)}
                               className={`p-2.5 rounded-lg border text-left transition ${
                                 selectedModelEngine === eng.id
-                                  ? 'bg-teal-600 border-teal-600 text-white font-bold shadow-xs'
+                                  ? 'bg-[#55175E] border-[#55175E] text-white font-bold shadow-xs'
                                   : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                               }`}
                             >
@@ -1681,7 +1805,7 @@ export default function App() {
 
                         <button
                           onClick={handleRunMLAnalysis}
-                          className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow transition flex items-center space-x-1.5"
+                          className="px-6 py-2.5 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-sm rounded-lg shadow transition flex items-center space-x-1.5"
                           disabled={runningAnalysis || selectedMutations.length === 0}
                         >
                           {runningAnalysis ? (
@@ -1709,19 +1833,19 @@ export default function App() {
                     <div className="flex space-x-4 border-b border-slate-200 pb-3 flex-shrink-0">
                       <button
                         onClick={() => setAnalysisStep(4)}
-                        className={`pb-2 text-sm font-bold border-b-2 transition ${analysisStep === 4 ? 'border-teal-600 text-teal-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                        className={`pb-2 text-sm font-bold border-b-2 transition ${analysisStep === 4 ? 'border-[#55175E] text-[#55175E]' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
                       >
                         4. Drug Resistance Dashboard
                       </button>
                       <button
                         onClick={() => setAnalysisStep(5)}
-                        className={`pb-2 text-sm font-bold border-b-2 transition ${analysisStep === 5 ? 'border-teal-600 text-teal-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                        className={`pb-2 text-sm font-bold border-b-2 transition ${analysisStep === 5 ? 'border-[#55175E] text-[#55175E]' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
                       >
                         5. Candidate Regimen Ranking
                       </button>
                       <button
                         onClick={() => setAnalysisStep(6)}
-                        className={`pb-2 text-sm font-bold border-b-2 transition ${analysisStep === 6 ? 'border-teal-600 text-teal-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                        className={`pb-2 text-sm font-bold border-b-2 transition ${analysisStep === 6 ? 'border-[#55175E] text-[#55175E]' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
                       >
                         6. Clinician Final Review
                       </button>
@@ -1732,7 +1856,7 @@ export default function App() {
                       <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl flex items-start space-x-3 text-xs leading-relaxed">
                         <AlertTriangle className="h-5 w-5 text-rose-600 flex-shrink-0 mt-0.5" />
                         <div>
-                          <span className="font-bold uppercase tracking-wider text-[10px] text-rose-700 block">LOW CONFIDENCE FLAG — CLINICIAN REVIEW REQUIRED</span>
+                          <span className="font-bold uppercase tracking-wider text-[10px] text-rose-700 block">LOW CONFIDENCE FLAG â€” CLINICIAN REVIEW REQUIRED</span>
                           <p className="mt-1">One or more predictions are below confidence thresholds, or case metrics indicate high complexity. Inspect details carefully.</p>
                           <ul className="list-disc list-inside mt-2 space-y-1 font-semibold">
                             {predictions.low_confidence_reasons && predictions.low_confidence_reasons.map((r, i) => (
@@ -1755,7 +1879,7 @@ export default function App() {
                               <div className="space-y-4 text-xs font-semibold">
                                 <div className="flex justify-between items-center">
                                   <span>Regimen Target recommendation:</span>
-                                  <span className="bg-teal-50 text-teal-800 px-2 py-0.5 rounded border border-teal-100">
+                                  <span className="bg-[#FAF7FD] text-[#55175E] px-2 py-0.5 rounded border border-[#EDE3FA]">
                                     {(predictions.overall_category || 'Unknown').replace('_', ' ')}
                                   </span>
                                 </div>
@@ -1780,7 +1904,7 @@ export default function App() {
                                       <span>{(prob * 100).toFixed(0)}%</span>
                                     </div>
                                     <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                      <div className="bg-teal-600 h-full" style={{ width: `${prob * 100}%` }}></div>
+                                      <div className="bg-[#55175E] h-full" style={{ width: `${prob * 100}%` }}></div>
                                     </div>
                                   </div>
                                 ))}
@@ -1858,7 +1982,7 @@ export default function App() {
                           </button>
                           <button
                             onClick={() => setAnalysisStep(5)}
-                            className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow transition flex items-center space-x-1.5"
+                            className="px-6 py-2.5 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-sm rounded-lg shadow transition flex items-center space-x-1.5"
                           >
                             <span>Proceed to Regimen Ranking</span>
                             <ArrowRight className="h-4 w-4" />
@@ -1991,7 +2115,7 @@ export default function App() {
                           </button>
                           <button
                             onClick={() => setAnalysisStep(6)}
-                            className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow transition flex items-center space-x-1.5"
+                            className="px-6 py-2.5 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-sm rounded-lg shadow transition flex items-center space-x-1.5"
                           >
                             <span>Proceed to Clinician Review</span>
                             <ArrowRight className="h-4 w-4" />
@@ -2031,7 +2155,7 @@ export default function App() {
                                     value={clinicalNotes}
                                     onChange={(e) => setClinicalNotes(e.target.value)}
                                     rows={5}
-                                    className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800"
+                                    className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800"
                                     placeholder="Enter your clinical findings, drug combinations choice, and patient guidelines alignment notes..."
                                     required
                                   />
@@ -2069,7 +2193,7 @@ export default function App() {
                                     href={`${API_BASE}/reports/${analysisResult.id}/pdf`}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-1.5"
+                                    className="px-6 py-3 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-1.5"
                                   >
                                     <Download className="h-4 w-4" />
                                     <span>Download PDF Report</span>
@@ -2133,12 +2257,12 @@ export default function App() {
                   <div className="space-y-8">
 
                     {/* Header Panel */}
-                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                       <div>
                         <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wider">AI Model & Pipeline Metadata</h3>
                         <p className="text-xs text-slate-500 mt-1">Version: {modelInfo.model_version} • Trained on: {modelInfo.training_date}</p>
                       </div>
-                      <span className="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200 uppercase tracking-wider">
+                      <span className="px-3 py-1 bg-[#F3E8FF] text-[#55175E] text-xs font-bold rounded-lg border border-[#D8C6EE] uppercase tracking-wider">
                         Production ML Portfolio — 25 Drugs in 5 Classes (50 Models)
                       </span>
                     </div>
@@ -2164,11 +2288,11 @@ export default function App() {
                           </div>
                           <div className="flex justify-between border-b border-slate-100 pb-2">
                             <span>Antiretroviral targets:</span>
-                            <span className="font-bold text-teal-700">25 Drugs in 5 Classes</span>
+                            <span className="font-bold text-[#55175E]">25 Drugs in 5 Classes</span>
                           </div>
                           <div className="flex justify-between pb-1">
                             <span>Model validation status:</span>
-                            <span className="text-emerald-600 font-bold">Validated (Stanford HIVdb)</span>
+                            <span className="text-[#55175E] font-bold">Validated (Stanford HIVdb)</span>
                           </div>
                         </div>
 
@@ -2201,7 +2325,7 @@ export default function App() {
                               <YAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
                               <Tooltip formatter={(value) => `${Number(value).toFixed(1)}%`} />
                               <Legend wrapperStyle={{ fontSize: 10, fontWeight: 'bold' }} />
-                              <Bar dataKey="accuracy" fill="#0d9488" name="Accuracy" />
+                              <Bar dataKey="accuracy" fill="#55175E" name="Accuracy" />
                               <Bar dataKey="sensitivity" fill="#0284c7" name="Sensitivity (Recall)" />
                               <Bar dataKey="specificity" fill="#a855f7" name="Specificity" />
                               <Bar dataKey="f1" fill="#64748b" name="F1-Score" />
@@ -2223,7 +2347,7 @@ export default function App() {
                         <select
                           value={selectedDrugForImportance}
                           onChange={(e) => setSelectedDrugForImportance(e.target.value)}
-                          className="pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 font-semibold"
+                          className="pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] font-semibold"
                         >
                           {Object.entries(modelInfo.models || {}).filter(([k]) => k !== 'model_target').map(([drugKey, item]) => (
                             <option key={drugKey} value={drugKey}>
@@ -2298,7 +2422,7 @@ export default function App() {
                     {/* Overview Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
-                        <div className="bg-teal-50 p-3 rounded-lg text-teal-600">
+                        <div className="bg-[#FAF7FD] p-3 rounded-lg text-[#55175E]">
                           <FileSpreadsheet className="h-6 w-6" />
                         </div>
                         <div>
@@ -2393,7 +2517,7 @@ export default function App() {
                         <p className="text-xs text-slate-500 mt-1">Configure scoring weights, penalties, and redundant drug combinations.</p>
                       </div>
 
-                      <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-100 uppercase">
+                      <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-[#F3E8FF] text-[#55175E] border border-[#D8C6EE] uppercase">
                         Status: Configured
                       </span>
                     </div>
@@ -2413,7 +2537,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, active_drug_score: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2426,7 +2550,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, reduced_activity_score: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2439,7 +2563,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, high_resistance_score: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2452,7 +2576,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, dual_nrtI_bonus: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2465,7 +2589,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, class_diversity_bonus: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2478,7 +2602,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, first_line_who_preference_bonus: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2491,7 +2615,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, high_genetic_barrier_bonus: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2504,7 +2628,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, redundancy_penalty: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
 
@@ -2517,7 +2641,7 @@ export default function App() {
                                 ...kbSettings,
                                 scoring_weights: { ...kbSettings.scoring_weights, unsupported_drug_penalty: parseFloat(e.target.value) || 0 }
                               })}
-                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white text-slate-800 font-semibold"
+                              className="w-full pl-3 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white text-slate-800 font-semibold"
                             />
                           </div>
                         </div>
@@ -2541,7 +2665,7 @@ export default function App() {
                       <div className="border-t border-slate-100 pt-6 flex justify-end">
                         <button
                           onClick={saveKbSettings}
-                          className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-1.5"
+                          className="px-6 py-2.5 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-1.5"
                           disabled={savingKb}
                         >
                           {savingKb ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
@@ -2578,15 +2702,15 @@ export default function App() {
 
                 {/* PROFILE HEADER CARD */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                  <div className="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 px-8 py-10 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                  <div className="bg-gradient-to-r from-slate-900 via-[#55175E] to-slate-900 px-8 py-10 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div className="flex items-center space-x-6">
                       <div className="relative group">
-                        <div className="w-24 h-24 rounded-full bg-teal-600/30 border-2 border-teal-400 flex items-center justify-center font-black text-white text-3xl shadow-xl">
+                        <div className="w-24 h-24 rounded-full bg-[#55175E]/30 border-2 border-teal-400 flex items-center justify-center font-black text-white text-3xl shadow-xl">
                           {currentUser?.full_name ? currentUser.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'SJ'}
                         </div>
                         <button 
                           onClick={handleOpenEditProfile} 
-                          className="absolute bottom-0 right-0 p-2 bg-teal-500 hover:bg-teal-600 rounded-full text-white shadow-md transition"
+                          className="absolute bottom-0 right-0 p-2 bg-[#55175E] hover:bg-[#421047] rounded-full text-white shadow-md transition"
                           title="Change Profile Photo / Details"
                         >
                           <Sparkles className="h-3.5 w-3.5" />
@@ -2596,12 +2720,12 @@ export default function App() {
                       <div className="space-y-1">
                         <div className="flex items-center space-x-3">
                           <h3 className="text-2xl font-black text-white tracking-tight">{currentUser?.full_name || "Dr. Sarah Jenkins, MD"}</h3>
-                          <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-bold rounded-full border border-emerald-500/30 inline-flex items-center space-x-1">
-                            <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />
+                          <span className="px-3 py-1 bg-[#EDE3FA]/20 text-[#EDE3FA] text-xs font-bold rounded-full border border-[#EDE3FA]/40 inline-flex items-center space-x-1">
+                            <CheckCircle className="h-3.5 w-3.5 text-[#EDE3FA]" />
                             <span>Verified Clinician</span>
                           </span>
                         </div>
-                        <p className="text-sm font-semibold text-teal-300">
+                        <p className="text-sm font-semibold text-[#EDE3FA]">
                           {currentUser?.specialization || "HIV Clinical Specialist & Infectious Diseases"}
                         </p>
                         <p className="text-xs text-slate-300 font-medium">
@@ -2613,7 +2737,7 @@ export default function App() {
                     <div className="flex items-center space-x-3">
                       <button
                         onClick={handleOpenEditProfile}
-                        className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-2"
+                        className="px-5 py-2.5 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-2"
                       >
                         <Settings className="h-4 w-4" />
                         <span>Edit Profile</span>
@@ -2643,7 +2767,7 @@ export default function App() {
                   {/* CARD 1: PROFESSIONAL INFORMATION */}
                   <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
                     <div className="flex items-center space-x-2 border-b border-slate-100 pb-4">
-                      <Award className="h-5 w-5 text-teal-600" />
+                      <Award className="h-5 w-5 text-[#55175E]" />
                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wider">Professional Credentials</h4>
                     </div>
 
@@ -2688,7 +2812,7 @@ export default function App() {
                   {/* CARD 2: CONTACT & LOCATION */}
                   <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
                     <div className="flex items-center space-x-2 border-b border-slate-100 pb-4">
-                      <Users className="h-5 w-5 text-teal-600" />
+                      <Users className="h-5 w-5 text-[#55175E]" />
                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wider">Contact & Location Information</h4>
                     </div>
 
@@ -2697,7 +2821,7 @@ export default function App() {
                         <span className="text-slate-400 font-semibold block uppercase tracking-wider text-[10px] mb-1">Primary Email Address</span>
                         <p className="font-bold text-slate-800 bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center justify-between">
                           <span>{currentUser?.email || "doctor@hivclinic.org"}</span>
-                          <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] rounded font-bold">Verified</span>
+                          <span className="px-2 py-0.5 bg-[#F3E8FF] text-[#55175E] text-[10px] rounded font-bold border border-[#D8C6EE]">Verified</span>
                         </p>
                       </div>
 
@@ -2725,7 +2849,7 @@ export default function App() {
                   {/* CARD 3: ACCOUNT & SECURITY */}
                   <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
                     <div className="flex items-center space-x-2 border-b border-slate-100 pb-4">
-                      <Lock className="h-5 w-5 text-teal-600" />
+                      <Lock className="h-5 w-5 text-[#55175E]" />
                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wider">Account & Security Status</h4>
                     </div>
 
@@ -2737,7 +2861,7 @@ export default function App() {
                         </div>
                         <button 
                           onClick={() => setTfaEnabled(!tfaEnabled)}
-                          className={`px-3 py-1.5 rounded-lg font-bold text-[11px] transition ${tfaEnabled ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-200 text-slate-600'}`}
+                          className={`px-3 py-1.5 rounded-lg font-bold text-[11px] transition ${tfaEnabled ? 'bg-[#F3E8FF] text-[#55175E] border border-[#D8C6EE]' : 'bg-slate-200 text-slate-600'}`}
                         >
                           {tfaEnabled ? 'Enabled' : 'Disabled'}
                         </button>
@@ -2747,7 +2871,7 @@ export default function App() {
                         <span className="font-bold text-slate-800 block">Active Device Sessions</span>
                         <div className="flex items-center justify-between text-[11px]">
                           <span className="text-slate-600 font-medium">Windows PC • Chrome • Active Now</span>
-                          <span className="px-2 py-0.5 bg-teal-50 text-teal-700 font-bold rounded">Current Session</span>
+                          <span className="px-2 py-0.5 bg-[#FAF7FD] text-[#55175E] font-bold rounded">Current Session</span>
                         </div>
                       </div>
 
@@ -2756,7 +2880,7 @@ export default function App() {
                         <span className="font-bold text-slate-800 block uppercase text-[11px] tracking-wider">Security Credentials</span>
                         
                         {passwordChangeMsg && (
-                          <div className="p-2.5 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-lg border border-emerald-200">
+                          <div className="p-2.5 bg-[#F3E8FF] text-[#55175E] text-xs font-bold rounded-lg border border-[#D8C6EE]">
                             {passwordChangeMsg}
                           </div>
                         )}
@@ -2772,7 +2896,7 @@ export default function App() {
                             placeholder="Current Password"
                             value={oldPassword}
                             onChange={(e) => setOldPassword(e.target.value)}
-                            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                             required
                           />
                           <input
@@ -2780,7 +2904,7 @@ export default function App() {
                             placeholder="New Password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                             required
                           />
                         </div>
@@ -2800,7 +2924,7 @@ export default function App() {
                   {/* CARD 4: APPLICATION PREFERENCES */}
                   <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
                     <div className="flex items-center space-x-2 border-b border-slate-100 pb-4">
-                      <Settings className="h-5 w-5 text-teal-600" />
+                      <Settings className="h-5 w-5 text-[#55175E]" />
                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wider">Application & Clinical Preferences</h4>
                     </div>
 
@@ -2814,7 +2938,7 @@ export default function App() {
                           type="checkbox"
                           checked={clinicalAlerts}
                           onChange={(e) => setClinicalAlerts(e.target.checked)}
-                          className="h-4 w-4 text-teal-600 rounded focus:ring-teal-500 cursor-pointer"
+                          className="h-4 w-4 text-[#55175E] rounded focus:ring-[#55175E] cursor-pointer"
                         />
                       </div>
 
@@ -2827,14 +2951,14 @@ export default function App() {
                           type="checkbox"
                           checked={emailNotifs}
                           onChange={(e) => setEmailNotifs(e.target.checked)}
-                          className="h-4 w-4 text-teal-600 rounded focus:ring-teal-500 cursor-pointer"
+                          className="h-4 w-4 text-[#55175E] rounded focus:ring-[#55175E] cursor-pointer"
                         />
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                         <div>
                           <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Interface Theme</label>
-                          <select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500">
+                          <select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E]">
                             <option value="light">Clinical Slate (Light)</option>
                             <option value="dark">Dark Mode</option>
                           </select>
@@ -2842,7 +2966,7 @@ export default function App() {
 
                         <div>
                           <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Language Selection</label>
-                          <select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500">
+                          <select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E]">
                             <option value="en-US">English (US)</option>
                             <option value="es-ES">Spanish</option>
                             <option value="fr-FR">French</option>
@@ -2861,7 +2985,7 @@ export default function App() {
 
           {/* Footer Disclaimer */}
           <footer className="bg-white border-t border-slate-200 px-8 py-5 text-center flex-shrink-0 text-[10px] text-slate-400 leading-relaxed font-semibold">
-            <span>SIH 2026 Student Innovation Project • MCA, Shri Shankaracharya Technical Campus, Bhilai • Decision Support Only • Final ART selection must remain with the NACO authorized treating clinician.</span>
+            <span>SIH 2026 Student Innovation Project â€¢ MCA, Shri Shankaracharya Technical Campus, Bhilai â€¢ Decision Support Only â€¢ Final ART selection must remain with the NACO authorized treating clinician.</span>
           </footer>
 
         </main>
@@ -2875,7 +2999,7 @@ export default function App() {
             
             <div className="flex justify-between items-center border-b border-slate-100 pb-4">
               <div className="flex items-center space-x-2">
-                <Settings className="h-5 w-5 text-teal-600" />
+                <Settings className="h-5 w-5 text-[#55175E]" />
                 <h3 className="font-bold text-slate-800 text-base">Edit Doctor Profile & Clinical Credentials</h3>
               </div>
               <button onClick={() => setIsEditProfileModalOpen(false)} className="text-slate-400 hover:text-slate-600">
@@ -2892,7 +3016,7 @@ export default function App() {
                     type="text"
                     value={editFullName}
                     onChange={(e) => setEditFullName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                     required
                   />
                 </div>
@@ -2903,7 +3027,7 @@ export default function App() {
                     type="text"
                     value={editRegNumber}
                     onChange={(e) => setEditRegNumber(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                     required
                   />
                 </div>
@@ -2914,7 +3038,7 @@ export default function App() {
                     type="text"
                     value={editSpecialization}
                     onChange={(e) => setEditSpecialization(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                     required
                   />
                 </div>
@@ -2925,7 +3049,7 @@ export default function App() {
                     type="number"
                     value={editExperienceYears}
                     onChange={(e) => setEditExperienceYears(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                     required
                   />
                 </div>
@@ -2936,7 +3060,7 @@ export default function App() {
                     type="text"
                     value={editHospitalName}
                     onChange={(e) => setEditHospitalName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                     required
                   />
                 </div>
@@ -2947,7 +3071,7 @@ export default function App() {
                     type="text"
                     value={editDepartment}
                     onChange={(e) => setEditDepartment(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                     required
                   />
                 </div>
@@ -2958,7 +3082,7 @@ export default function App() {
                     type="text"
                     value={editPhone}
                     onChange={(e) => setEditPhone(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                   />
                 </div>
 
@@ -2968,7 +3092,7 @@ export default function App() {
                     type="text"
                     value={editLocation}
                     onChange={(e) => setEditLocation(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                   />
                 </div>
 
@@ -2978,7 +3102,7 @@ export default function App() {
                     rows={3}
                     value={editBio}
                     onChange={(e) => setEditBio(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-[#55175E] focus:bg-white"
                   />
                 </div>
 
@@ -2995,7 +3119,7 @@ export default function App() {
                 <button
                   type="submit"
                   disabled={savingProfile}
-                  className="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-1.5"
+                  className="px-6 py-2 bg-[#55175E] hover:bg-[#421047] text-white font-bold text-xs rounded-lg shadow transition flex items-center space-x-1.5"
                 >
                   {savingProfile ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
                   <span>Save Changes</span>

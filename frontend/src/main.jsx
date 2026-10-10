@@ -35,7 +35,7 @@ class ErrorBoundary extends React.Component {
               this.setState({ hasError: false, error: null });
               window.location.href = '/';
             }}
-            style={{ padding: '0.625rem 1.5rem', backgroundColor: '#0d9488', color: '#ffffff', fontWeight: 'bold', fontSize: '0.875rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}
+            style={{ padding: '0.625rem 1.5rem', backgroundColor: '#55175E', color: '#ffffff', fontWeight: 'bold', fontSize: '0.875rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}
           >
             Reload Clinical Portal
           </button>

@@ -32,11 +32,11 @@ export default function Pagination({
   };
 
   return (
-    <div className="px-6 py-3.5 bg-slate-50/80 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+    <div className="px-6 py-3.5 bg-white border-t border-[#E5EAF0] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
       {/* Record Counter */}
-      <div className="text-slate-500 font-medium">
-        Showing <span className="font-bold text-slate-800">{startIndex}–{endIndex}</span> of{' '}
-        <span className="font-bold text-slate-800">{totalRecords}</span> {label}
+      <div className="text-[#64748B] font-medium">
+        Showing <span className="font-bold text-[#17233B]">{startIndex}–{endIndex}</span> of{' '}
+        <span className="font-bold text-[#17233B]">{totalRecords}</span> {label}
       </div>
 
       {/* Pagination Controls */}
@@ -48,8 +48,8 @@ export default function Pagination({
           disabled={currentPage === 1}
           className={`px-3 py-1.5 rounded-lg border font-bold text-xs transition flex items-center space-x-1 ${
             currentPage === 1
-              ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
-              : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200 shadow-2xs cursor-pointer'
+              ? 'bg-slate-50 text-slate-300 border-[#E5EAF0] cursor-not-allowed'
+              : 'bg-white hover:bg-[#FAF7FD] hover:text-[#55175E] text-[#17233B] border-[#E5EAF0] cursor-pointer'
           }`}
         >
           <ChevronLeft className="h-3.5 w-3.5" />
@@ -68,8 +68,8 @@ export default function Pagination({
                 onClick={() => onPageChange(num)}
                 className={`w-8 h-8 rounded-lg border font-bold text-xs transition flex items-center justify-center ${
                   currentPage === num
-                    ? 'bg-teal-600 text-white border-teal-600 shadow-xs'
-                    : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200 cursor-pointer'
+                    ? 'bg-[#55175E] text-white border-[#55175E] shadow-sm'
+                    : 'bg-white hover:bg-[#FAF7FD] hover:text-[#55175E] text-[#17233B] border-[#E5EAF0] cursor-pointer'
                 }`}
               >
                 {num}
@@ -85,8 +85,8 @@ export default function Pagination({
           disabled={currentPage === totalPages}
           className={`px-3 py-1.5 rounded-lg border font-bold text-xs transition flex items-center space-x-1 ${
             currentPage === totalPages
-              ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
-              : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200 shadow-2xs cursor-pointer'
+              ? 'bg-slate-50 text-slate-300 border-[#E5EAF0] cursor-not-allowed'
+              : 'bg-white hover:bg-[#FAF7FD] hover:text-[#55175E] text-[#17233B] border-[#E5EAF0] cursor-pointer'
           }`}
         >
           <span>Next</span>

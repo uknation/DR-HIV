@@ -46,26 +46,6 @@ _DEEP_CACHE = {
     "metrics": None
 }
 
-_SPATIAL_MODELS = None
-_BIO_EMBEDDING = None
-
-def get_spatial_models():
-    global _SPATIAL_MODELS
-    if _SPATIAL_MODELS is None:
-        _SPATIAL_MODELS = {
-            "PR": SpatialContactBias(length=99, protein_type="PR"),
-            "RT": SpatialContactBias(length=240, protein_type="RT"),
-            "IN": SpatialContactBias(length=288, protein_type="IN"),
-            "CA": SpatialContactBias(length=231, protein_type="CA"),
-        }
-    return _SPATIAL_MODELS
-
-def get_bio_embedding():
-    global _BIO_EMBEDDING
-    if _BIO_EMBEDDING is None:
-        _BIO_EMBEDDING = BiophysicalResidueEmbedding()
-    return _BIO_EMBEDDING
-
 CONFIGS = {
     "PI": {
         "gene_type": "PR",
@@ -80,7 +60,7 @@ CONFIGS = {
     "NNRTI": {
         "gene_type": "RT",
         "max_len": 240,
-        "drugs": ["EFV", "NVP", "ETR", "RPV"]
+        "drugs": ["EFV", "NVP", "ETR", "RPV", "DOR"]
     },
     "INSTI": {
         "gene_type": "IN",
@@ -127,52 +107,44 @@ DRUG_METADATA = {
     "LEN": ("Lenacapavir", "Capsid")
 }
 
-import gc
-
-try:
-    torch.set_num_threads(1)
-except Exception:
-    pass
-
-def load_deep_models(engine: str = "cnn"):
-    """Loads only required 1D-CNN and/or ESM-2 models into memory based on selected engine."""
+def load_deep_models():
+    """Loads all 1D-CNN and ESM-2 models into memory."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     # 1. Load metrics if available
-    if _DEEP_CACHE["metrics"] is None:
-        metrics_path = os.path.join(DEEP_MODELS_DIR, "metrics_deep.json")
-        if os.path.exists(metrics_path):
-            with open(metrics_path, "r") as f:
-                _DEEP_CACHE["metrics"] = json.load(f)
+    metrics_path = os.path.join(DEEP_MODELS_DIR, "metrics_deep.json")
+    if os.path.exists(metrics_path):
+        with open(metrics_path, "r") as f:
+            _DEEP_CACHE["metrics"] = json.load(f)
             
     for group_name, cfg in CONFIGS.items():
-        # Load 1D-CNN only if cnn or ensemble engine selected
-        if engine in ["cnn", "ensemble"]:
-            cnn_path = os.path.join(DEEP_MODELS_DIR, f"cnn_{group_name}.pt")
-            if os.path.exists(cnn_path) and group_name not in _DEEP_CACHE["cnn"]:
-                ckpt = torch.load(cnn_path, map_location=device)
-                cnn = HIV1DCNN(
-                    num_drugs=len(cfg["drugs"]),
-                    drug_names=cfg["drugs"],
-                    gene_type=cfg["gene_type"]
-                ).to(device)
-                cnn.load_state_dict(ckpt["state_dict"])
-                cnn.eval()
-                _DEEP_CACHE["cnn"][group_name] = cnn
-                _DEEP_CACHE["grad_cam"][group_name] = GradCAM1D(cnn)
+        # Load 1D-CNN
+        cnn_path = os.path.join(DEEP_MODELS_DIR, f"cnn_{group_name}.pt")
+        if os.path.exists(cnn_path) and group_name not in _DEEP_CACHE["cnn"]:
+            ckpt = torch.load(cnn_path, map_location=device)
+            drugs = ckpt.get("drug_names", cfg["drugs"])
+            cnn = HIV1DCNN(
+                num_drugs=len(drugs),
+                drug_names=drugs,
+                gene_type=cfg["gene_type"]
+            ).to(device)
+            cnn.load_state_dict(ckpt["state_dict"])
+            cnn.eval()
+            _DEEP_CACHE["cnn"][group_name] = cnn
+            _DEEP_CACHE["grad_cam"][group_name] = GradCAM1D(cnn)
             
-        # Load ESM-2 only if esm or ensemble engine selected
-        if engine in ["esm", "ensemble"]:
-            esm_path = os.path.join(DEEP_MODELS_DIR, f"esm_{group_name}.pt")
-            if os.path.exists(esm_path) and group_name not in _DEEP_CACHE["esm"]:
-                ckpt = torch.load(esm_path, map_location=device)
-                esm = ESMResistanceClassifier(
-                    num_drugs=len(cfg["drugs"]),
-                    drug_names=cfg["drugs"]
-                ).to(device)
-                esm.load_state_dict(ckpt["state_dict"])
-                esm.eval()
-                _DEEP_CACHE["esm"][group_name] = esm
+        # Load ESM-2
+        esm_path = os.path.join(DEEP_MODELS_DIR, f"esm_{group_name}.pt")
+        if os.path.exists(esm_path) and group_name not in _DEEP_CACHE["esm"]:
+            ckpt = torch.load(esm_path, map_location=device)
+            drugs = ckpt.get("drug_names", cfg["drugs"])
+            esm = ESMResistanceClassifier(
+                num_drugs=len(drugs),
+                drug_names=drugs
+            ).to(device)
+            esm.load_state_dict(ckpt["state_dict"])
+            esm.eval()
+            _DEEP_CACHE["esm"][group_name] = esm
 
 def predict_sequence_aware_resistance(
     mutations: List[str],
@@ -188,7 +160,7 @@ def predict_sequence_aware_resistance(
       - sequence_representations: reconstructed PR and RT sequences
       - engine_used: selected engine
     """
-    load_deep_models(engine)
+    load_deep_models()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     # 1. Reconstruct PR, RT, IN, and CA sequences
@@ -218,7 +190,7 @@ def predict_sequence_aware_resistance(
         
         probs_cnn, log_fc_cnn = None, None
         if cnn_model is not None:
-            with torch.inference_mode():
+            with torch.no_grad():
                 out_cnn = cnn_model(tokens)
                 probs_cnn = out_cnn["probabilities"].cpu().numpy().ravel()
                 log_fc_cnn = out_cnn["log_fold_change"].cpu().numpy().ravel()
@@ -226,7 +198,7 @@ def predict_sequence_aware_resistance(
         # Inference with ESM-2
         probs_esm, log_fc_esm = None, None
         if esm_model is not None:
-            with torch.inference_mode():
+            with torch.no_grad():
                 out_esm = esm_model(tokens)
                 probs_esm = out_esm["probabilities"].cpu().numpy().ravel()
                 log_fc_esm = out_esm["log_fold_change"].cpu().numpy().ravel()
@@ -307,9 +279,9 @@ def predict_sequence_aware_resistance(
                 "status": "Success"
             }
             
-        # Generate Grad-CAM selectively for groups with mutations or reduced/high resistance
+        # Generate Grad-CAM for the first resistant drug or top drug in group
         grad_cam_explainer = _DEEP_CACHE["grad_cam"].get(group_name)
-        if grad_cam_explainer is not None and (not is_wildtype or (probs_cnn is not None and np.max(probs_cnn) >= 0.30)):
+        if grad_cam_explainer is not None:
             # Pick first drug with highest resistance probability
             top_drug_idx = int(np.argmax(probs_cnn)) if probs_cnn is not None else 0
             cam_profile = grad_cam_explainer.generate_cam(tokens, target_drug_idx=top_drug_idx, orig_seq_len=cfg["max_len"])
@@ -342,11 +314,17 @@ def predict_sequence_aware_resistance(
         uncertainty=torch.tensor(raw_u)
     )
 
-    # Next-Gen Neural Network V2.0: Extract biophysical deltas and 3D pocket contacts using singletons
-    dummy_bio = get_bio_embedding()
+    # Next-Gen Neural Network V2.0: Extract biophysical deltas and 3D pocket contacts
+    dummy_bio = BiophysicalResidueEmbedding()
     biophysical_profiles = {}
     spatial_3d_pockets = {}
-    spatial_models = get_spatial_models()
+    
+    spatial_models = {
+        "PR": SpatialContactBias(length=99, protein_type="PR"),
+        "RT": SpatialContactBias(length=240, protein_type="RT"),
+        "IN": SpatialContactBias(length=288, protein_type="IN"),
+        "CA": SpatialContactBias(length=231, protein_type="CA"),
+    }
     
     for m in mutations:
         wt, pos, mut_aa = parse_mutation_token(m)
@@ -363,7 +341,7 @@ def predict_sequence_aware_resistance(
                 elif m in ["M66I", "Q67H", "K70N", "N74D", "N74S", "A105T", "T107N"]:
                     spatial_3d_pockets[m] = spatial_models["CA"].get_3d_pocket_neighbors(pos, radius=8.5)
 
-    result = {
+    return {
         "engine": f"Sequence-Aware Deep Learning ({engine.upper()})",
         "drug_predictions": drug_predictions,
         "structural_explainability": explainability_profiles,
@@ -387,7 +365,6 @@ def predict_sequence_aware_resistance(
         "low_confidence_flag": low_confidence_flag,
         "mutations_analyzed": mutations
     }
-    return result
 
 if __name__ == "__main__":
     test_muts = ["D30N", "M46I", "I84V", "M184V", "K103N"]

@@ -1,0 +1,267 @@
+{
+  "title": "Stanford HIVdb Clinical Genotype-Phenotype Resistance Manifest",
+  "version": "v2.0-genuine-stanford-clinical",
+  "generated_at": "2026-10-09 16:30:09",
+  "total_drug_classes": 5,
+  "total_antiretroviral_drugs": 25,
+  "total_isolate_samples": 6574,
+  "classes": {
+    "PI": {
+      "group_key": "PI",
+      "class_name": "Protease Inhibitors (PI)",
+      "gene_type": "PR",
+      "seq_len": 99,
+      "samples_count": 2171,
+      "drugs": [
+        "FPV",
+        "ATV",
+        "IDV",
+        "LPV",
+        "NFV",
+        "SQV",
+        "TPV",
+        "DRV"
+      ],
+      "drug_stats": {
+        "FPV": {
+          "tested": 2052,
+          "resistant": 1091,
+          "susceptible": 961,
+          "cutoff": 1.5
+        },
+        "ATV": {
+          "tested": 1505,
+          "resistant": 796,
+          "susceptible": 709,
+          "cutoff": 3.0
+        },
+        "IDV": {
+          "tested": 2098,
+          "resistant": 1050,
+          "susceptible": 1048,
+          "cutoff": 3.0
+        },
+        "LPV": {
+          "tested": 1807,
+          "resistant": 941,
+          "susceptible": 866,
+          "cutoff": 3.0
+        },
+        "NFV": {
+          "tested": 2133,
+          "resistant": 1221,
+          "susceptible": 912,
+          "cutoff": 3.0
+        },
+        "SQV": {
+          "tested": 2084,
+          "resistant": 897,
+          "susceptible": 1187,
+          "cutoff": 3.0
+        },
+        "TPV": {
+          "tested": 1226,
+          "resistant": 305,
+          "susceptible": 921,
+          "cutoff": 3.0
+        },
+        "DRV": {
+          "tested": 993,
+          "resistant": 305,
+          "susceptible": 688,
+          "cutoff": 3.0
+        }
+      },
+      "position_features_count": 719,
+      "mutation_features_count": 872,
+      "total_tabular_columns": 1600,
+      "tabular_file": "PI_DataSet_processed.csv",
+      "sequence_file": "PI_sequences.csv"
+    },
+    "NRTI": {
+      "group_key": "NRTI",
+      "class_name": "Nucleoside Reverse Transcriptase Inhibitors (NRTI)",
+      "gene_type": "RT",
+      "seq_len": 240,
+      "samples_count": 1867,
+      "drugs": [
+        "3TC",
+        "ABC",
+        "AZT",
+        "D4T",
+        "DDI",
+        "TDF"
+      ],
+      "drug_stats": {
+        "3TC": {
+          "tested": 1839,
+          "resistant": 1164,
+          "susceptible": 675,
+          "cutoff": 3.0
+        },
+        "ABC": {
+          "tested": 1731,
+          "resistant": 927,
+          "susceptible": 804,
+          "cutoff": 3.0
+        },
+        "AZT": {
+          "tested": 1853,
+          "resistant": 834,
+          "susceptible": 1019,
+          "cutoff": 3.0
+        },
+        "D4T": {
+          "tested": 1846,
+          "resistant": 338,
+          "susceptible": 1508,
+          "cutoff": 3.0
+        },
+        "DDI": {
+          "tested": 1849,
+          "resistant": 163,
+          "susceptible": 1686,
+          "cutoff": 3.0
+        },
+        "TDF": {
+          "tested": 1548,
+          "resistant": 493,
+          "susceptible": 1055,
+          "cutoff": 1.5
+        }
+      },
+      "position_features_count": 1409,
+      "mutation_features_count": 1900,
+      "total_tabular_columns": 3316,
+      "tabular_file": "NRTI_DataSet_processed.csv",
+      "sequence_file": "NRTI_sequences.csv"
+    },
+    "NNRTI": {
+      "group_key": "NNRTI",
+      "class_name": "Non-Nucleoside Reverse Transcriptase Inhibitors (NNRTI)",
+      "gene_type": "RT",
+      "seq_len": 240,
+      "samples_count": 1535,
+      "drugs": [
+        "EFV",
+        "NVP",
+        "ETR",
+        "RPV",
+        "DOR"
+      ],
+      "drug_stats": {
+        "EFV": {
+          "tested": 1446,
+          "resistant": 666,
+          "susceptible": 780,
+          "cutoff": 3.0
+        },
+        "NVP": {
+          "tested": 1371,
+          "resistant": 711,
+          "susceptible": 660,
+          "cutoff": 3.0
+        },
+        "ETR": {
+          "tested": 677,
+          "resistant": 194,
+          "susceptible": 483,
+          "cutoff": 3.0
+        },
+        "RPV": {
+          "tested": 215,
+          "resistant": 110,
+          "susceptible": 105,
+          "cutoff": 2.0
+        },
+        "DOR": {
+          "tested": 88,
+          "resistant": 59,
+          "susceptible": 29,
+          "cutoff": 2.5
+        }
+      },
+      "position_features_count": 1691,
+      "mutation_features_count": 1737,
+      "total_tabular_columns": 3434,
+      "tabular_file": "NNRTI_DataSet_processed.csv",
+      "sequence_file": "NNRTI_sequences.csv"
+    },
+    "INSTI": {
+      "group_key": "INSTI",
+      "class_name": "Integrase Strand Transfer Inhibitors (INSTI)",
+      "gene_type": "IN",
+      "seq_len": 288,
+      "samples_count": 861,
+      "drugs": [
+        "RAL",
+        "EVG",
+        "DTG",
+        "BIC",
+        "CAB"
+      ],
+      "drug_stats": {
+        "RAL": {
+          "tested": 753,
+          "resistant": 334,
+          "susceptible": 419,
+          "cutoff": 2.0
+        },
+        "EVG": {
+          "tested": 754,
+          "resistant": 403,
+          "susceptible": 351,
+          "cutoff": 2.5
+        },
+        "DTG": {
+          "tested": 370,
+          "resistant": 72,
+          "susceptible": 298,
+          "cutoff": 3.0
+        },
+        "BIC": {
+          "tested": 287,
+          "resistant": 68,
+          "susceptible": 219,
+          "cutoff": 2.5
+        },
+        "CAB": {
+          "tested": 64,
+          "resistant": 53,
+          "susceptible": 11,
+          "cutoff": 2.5
+        }
+      },
+      "position_features_count": 956,
+      "mutation_features_count": 661,
+      "total_tabular_columns": 1623,
+      "tabular_file": "INSTI_DataSet_processed.csv",
+      "sequence_file": "INSTI_sequences.csv"
+    },
+    "CAPSID": {
+      "group_key": "CAPSID",
+      "class_name": "Capsid Inhibitor (Capsid)",
+      "gene_type": "CA",
+      "seq_len": 231,
+      "samples_count": 140,
+      "drugs": [
+        "LEN"
+      ],
+      "drug_stats": {
+        "LEN": {
+          "tested": 140,
+          "resistant": 111,
+          "susceptible": 29,
+          "cutoff": 3.0
+        }
+      },
+      "position_features_count": 249,
+      "mutation_features_count": 18,
+      "total_tabular_columns": 269,
+      "tabular_file": "Capsid_DataSet_processed.csv",
+      "sequence_file": "Capsid_sequences.csv"
+    }
+  },
+  "unified_master_dataset": "all_25_drugs_sequences.csv",
+  "guideline_standards": "Stanford HIVdb 9.5 / WHO 2024 / ANRS v35"
+}

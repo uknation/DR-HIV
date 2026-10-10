@@ -1,23 +1,14 @@
 {
   "drug": "IDV",
-  "file": "GenoPhenoDatasets1.csv",
-  "samples": 2098,
-  "resistant": 1050,
-  "susceptible": 1048,
-  "features": 346,
-  "acc": 0.935,
-  "auc": 0.983,
-  "r2": 0.68,
-  "top_mutations": [
-    "P90_M",
-    "P82_A",
-    "P54_V",
-    "P71_V",
-    "P46_I",
-    "P84_V",
-    "P46_L",
-    "P82_T",
-    "P24_I",
-    "P32_I"
-  ]
+  "group": "PI",
+  "samples_total": 2098,
+  "samples_train": 1678,
+  "samples_test": 420,
+  "accuracy": 0.9214,
+  "precision": 0.9155,
+  "recall": 0.9286,
+  "f1_score": 0.922,
+  "auc": 0.9816,
+  "rmse": 0.256,
+  "r2": 0.8574
 }

@@ -1,23 +1,14 @@
 {
   "drug": "ATV",
-  "file": "GenoPhenoDatasets1.csv",
-  "samples": 1505,
-  "resistant": 796,
-  "susceptible": 709,
-  "features": 320,
-  "acc": 0.925,
-  "auc": 0.98,
-  "r2": 0.698,
-  "top_mutations": [
-    "P90_M",
-    "P71_V",
-    "P33_F",
-    "P46_I",
-    "P84_V",
-    "P54_V",
-    "P82_A",
-    "P50_L",
-    "P88_D",
-    "P10_F"
-  ]
+  "group": "PI",
+  "samples_total": 1505,
+  "samples_train": 1204,
+  "samples_test": 301,
+  "accuracy": 0.9203,
+  "precision": 0.9355,
+  "recall": 0.9119,
+  "f1_score": 0.9236,
+  "auc": 0.982,
+  "rmse": 0.247,
+  "r2": 0.8859
 }

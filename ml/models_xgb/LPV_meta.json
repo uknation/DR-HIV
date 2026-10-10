@@ -1,23 +1,14 @@
 {
   "drug": "LPV",
-  "file": "GenoPhenoDatasets1.csv",
-  "samples": 1807,
-  "resistant": 941,
-  "susceptible": 866,
-  "features": 346,
-  "acc": 0.947,
-  "auc": 0.988,
-  "r2": 0.78,
-  "top_mutations": [
-    "P54_V",
-    "P71_V",
-    "P82_A",
-    "P84_V",
-    "P46_I",
-    "P24_I",
-    "P33_F",
-    "P90_M",
-    "P54_L",
-    "P32_I"
-  ]
+  "group": "PI",
+  "samples_total": 1807,
+  "samples_train": 1445,
+  "samples_test": 362,
+  "accuracy": 0.942,
+  "precision": 0.933,
+  "recall": 0.9577,
+  "f1_score": 0.9452,
+  "auc": 0.9849,
+  "rmse": 0.2463,
+  "r2": 0.9035
 }
