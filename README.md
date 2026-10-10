@@ -1,4 +1,4 @@
-# AI-Powered HIV-1 Drug Resistance Prediction & ART Regimen Selector
+# HIV-1 Drug Resistance Prediction & ART Regimen Selector
 
 ### *Clinical Decision-Support System for Antiretroviral Therapy (ART) Selection*
 
